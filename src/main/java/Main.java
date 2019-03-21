@@ -1,22 +1,27 @@
 import LOC.CalculateLOC;
-import LOC.GetRepository;
+import Repository.GetRepository;
+import Repository.repository;
+import Repository.repositoryFactory;
 import org.eclipse.jgit.api.Git;
 
 public class Main {
 
     public static void main(String args[]) {
         String GitAddress = "https://github.com/vegetable-father-son/Inverview-Preparation.git";
+
         try {
-            GetRepository getRepository = new GetRepository();
-            Git git = getRepository.openJGitRepository(GitAddress);
-            if (git == null)
+            repository repo = new repositoryFactory().cloneRepositoryFrom(GitAddress);
+            Git git = repo.getGit();
+            if (git == null){
+                System.out.println("Git is null");
                 return;
+            }
             System.out.println("Ready to calculate");
             CalculateLOC calculateLOC = new CalculateLOC();
             calculateLOC.WorkOutLOC(git);
 
-            System.out.println("Ready to cnceal");
-            getRepository.CloseJGitRepository();
+            System.out.println("Ready to cancel");
+            repo.deleteRepository();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -24,7 +29,7 @@ public class Main {
         /*String gitFilePath = "D:\\课程学习\\大三上\\javasub\\java-2018f-homework";
         File root = new File(gitFilePath);
         Git git = null;
-        Repository repository;
+        repository repository;
         try{
             git = Git.open(root);
             repository = git.getRepository();
@@ -40,6 +45,6 @@ public class Main {
 
 
         //getRepository.CloseJGitRepository();
-        //Repository repository = GetResponsibilty.openReposity();
+        //repository repository = GetResponsibilty.openReposity();
     }
 }

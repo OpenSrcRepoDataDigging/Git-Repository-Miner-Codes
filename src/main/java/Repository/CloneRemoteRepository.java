@@ -1,4 +1,4 @@
-package LOC;
+package Repository;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;

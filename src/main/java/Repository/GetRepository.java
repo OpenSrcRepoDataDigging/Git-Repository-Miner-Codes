@@ -1,4 +1,4 @@
-package LOC;
+package Repository;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
