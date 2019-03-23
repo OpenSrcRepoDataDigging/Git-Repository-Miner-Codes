@@ -1,9 +1,9 @@
 package LOC;
 
+import Contri.ContributorMap;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.*;
 import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.patch.FileHeader;
 import org.eclipse.jgit.patch.HunkHeader;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -13,13 +13,12 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CalculateLOC {
     private Git git;
+    ContributorMap contributorMap; //记录作者和记录作者贡献信息映射的Map，前期写在这里，后期得换个地方整合
     public CalculateLOC(){
 
     }
@@ -28,27 +27,25 @@ public class CalculateLOC {
         if(g == null)
             return;
         git = g;
-        RevWalk walk = new RevWalk(git.getRepository());
+
+        contributorMap = new ContributorMap(git); //记录作者和记录作者贡献信息映射的Map
         List<RevCommit> commitList = new ArrayList<>();
-        //获取最近两次记录
-        //Iterable<RevCommit> commits = git.log().setMaxCount(2).call();
         Iterable<RevCommit> commits = git.log().call();
-        System.out.println("---------------------------------------------------------");
         for(RevCommit commit:commits){
             commitList.add(commit);
-            System.out.println("commit " + commit.getName());
-            System.out.printf("Author: %s <%s>\n", commit.getAuthorIdent().getName(), commit.getAuthorIdent().getEmailAddress());
-            System.out.println("Date: " + commit.getAuthorIdent().getWhen());
-            System.out.println("\t" + commit.getShortMessage());
-            System.out.println("---------------------------------------------------------");
         }
-//        for(int i = 0; i < commitList.size() - 1; i++)
-//        {
-//            System.out.println("This is the " + i);
-//            ShowLOC(commitList.get(i), commitList.get(i + 1));
-//        }
-        //if(commitList.size() == 2)
-            //ShowLOC(commitList.get(0), commitList.get(1));
+        for(int i = 0; i < commitList.size() - 1; i++)
+        {
+            System.out.println("\033[31;1m" + "=======================This is the " + i + "th Commit======================="+"\033[0m");
+            ShowLOC(commitList.get(i), commitList.get(i + 1));
+        }
+        if(commitList.size() == 2)
+            ShowLOC(commitList.get(0), commitList.get(1));
+
+        contributorMap.getMaps().forEach((author,commitMessage)->{
+            commitMessage.dispalyContributorMessages();
+        });
+
     }
 
     private void ShowLOC(RevCommit revCommit, RevCommit commit) throws Exception{
@@ -82,9 +79,11 @@ public class CalculateLOC {
                     addSize += edit.getEndB() - edit.getBeginB();
                 }
             }
-            System.out.println("addSize = " + addSize);
-            System.out.println("subSize = " + subSize);
-            System.out.print("----------------end-----------------");
+            System.out.println("\033[32;1m" + "++" + addSize + "\033[0m");
+            System.out.println("\033[31;1m" + "--" + subSize + "\033[0m");
+            contributorMap.getContributor(revCommit.getAuthorIdent().getName()).setLOC_Add(revCommit.getName(),addSize);
+            contributorMap.getContributor(revCommit.getAuthorIdent().getName()).setLOC_Delete(revCommit.getName(),subSize);
+            System.out.println("----------------end-----------------");
             out.reset();
         }
     }
