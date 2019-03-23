@@ -35,6 +35,14 @@ public class Contributor {
         LOC_Delete_All += LOC_Delete;
     }
 
+    public int getLOC_Add_All() {
+        return LOC_Add_All;
+    }
+
+    public int getLOC_Delete_All() {
+        return LOC_Delete_All;
+    }
+
     public void dispalyContributorMessages(){
         System.out.println("Contributor Name: "+ this.AuthorName);
         System.out.println("\033[32;1m" + "LOC++:" + LOC_Add_All + "\033[0m");

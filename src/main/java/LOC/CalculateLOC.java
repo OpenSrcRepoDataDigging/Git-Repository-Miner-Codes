@@ -45,7 +45,8 @@ public class CalculateLOC {
         contributorMap.getMaps().forEach((author,commitMessage)->{
             commitMessage.dispalyContributorMessages();
         });
-
+        LOC_Charts charts = new LOC_Charts(contributorMap);
+        charts.drawChartPanel();
     }
 
     private void ShowLOC(RevCommit revCommit, RevCommit commit) throws Exception{
