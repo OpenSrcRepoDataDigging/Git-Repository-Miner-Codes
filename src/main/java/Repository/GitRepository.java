@@ -114,7 +114,7 @@ public class GitRepository {
 
     public static void main(String[] args) throws IOException, GitAPIException {
         // 设置文件路径
-        File repoDir = new File(""+".git");
+        File repoDir = new File("E:\\Tex Documents\\Machine Learning\\"+".git");
         // 用FileRepositoryBuilder打开一个仓库
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         // 获得对于一个仓库的引用

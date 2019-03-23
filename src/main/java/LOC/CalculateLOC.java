@@ -13,6 +13,8 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,19 +33,20 @@ public class CalculateLOC {
         //获取最近两次记录
         //Iterable<RevCommit> commits = git.log().setMaxCount(2).call();
         Iterable<RevCommit> commits = git.log().call();
+        System.out.println("---------------------------------------------------------");
         for(RevCommit commit:commits){
             commitList.add(commit);
-            System.out.println(commit.getFullMessage());
-            System.out.println(commit.getCommitTime());
-            System.out.println(commit.getAuthorIdent().getName());
-            System.out.println(commit.getAuthorIdent().getEmailAddress());
-            System.out.println(commit.getAuthorIdent().getWhen());
+            System.out.println("commit " + commit.getName());
+            System.out.printf("Author: %s <%s>\n", commit.getAuthorIdent().getName(), commit.getAuthorIdent().getEmailAddress());
+            System.out.println("Date: " + commit.getAuthorIdent().getWhen());
+            System.out.println("\t" + commit.getShortMessage());
+            System.out.println("---------------------------------------------------------");
         }
-        for(int i = 0; i < commitList.size() - 1; i++)
-        {
-            System.out.println("This is the " + i);
-            ShowLOC(commitList.get(i), commitList.get(i + 1));
-        }
+//        for(int i = 0; i < commitList.size() - 1; i++)
+//        {
+//            System.out.println("This is the " + i);
+//            ShowLOC(commitList.get(i), commitList.get(i + 1));
+//        }
         //if(commitList.size() == 2)
             //ShowLOC(commitList.get(0), commitList.get(1));
     }
