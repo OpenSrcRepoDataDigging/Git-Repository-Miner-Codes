@@ -22,7 +22,13 @@ public class CalculateLOC {
     public CalculateLOC(){
 
     }
-
+    /**
+     * 传入git信息，打印所有的LOC
+     * @param g
+     * Git 参数
+     * @return 
+     * @throws Exception
+     */
     public void WorkOutLOC(Git g) throws Exception{
         if(g == null)
             return;
@@ -48,6 +54,15 @@ public class CalculateLOC {
         LOC_Charts charts = new LOC_Charts(contributorMap);
         charts.drawChartPanel();
     }
+
+
+    /**
+     * 比较两个commit，计算获得两次commit代码的增减，填入用户对应的map中
+     * @param revCommit, commit
+     * revCommit 上一次的commit， commit新的commit
+     * @return
+     * @throws Exception
+     */
 
     private void ShowLOC(RevCommit revCommit, RevCommit commit) throws Exception{
         AbstractTreeIterator newTree = prepareTreeParser(revCommit);
@@ -88,7 +103,13 @@ public class CalculateLOC {
             out.reset();
         }
     }
-
+    /**
+     * 解析Commit的信息得到Tree指针
+     * @param revCommit
+     * revCommit commit指针
+     * @return null
+     * @throws Exception
+     */
     private AbstractTreeIterator prepareTreeParser(RevCommit revCommit) {
         System.out.println("----------------prepare Tree Parse ----------------");
         System.out.println(revCommit.getId());
