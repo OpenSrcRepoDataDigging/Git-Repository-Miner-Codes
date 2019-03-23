@@ -17,9 +17,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 
-public class repository {
+public class GitRepository {
 
-    private Repository repo;
     private Git git;
     private String localPath;
     private String remoteURL;
@@ -27,7 +26,7 @@ public class repository {
 
     //type == 0，则从远程服务器Git Clone，位置放在默认的缓存
     //type == 1，则直接打开本地路径上的Git 仓库
-    public repository(String URL,int type) {
+    public GitRepository(String URL, int type) {
         switch (type){
             case 0:{
                 this.remoteURL = URL;
@@ -40,17 +39,18 @@ public class repository {
                 break;
             }
             case 1:{
-
+                openRepository(URL);
                 break;
             }
         }
     }
 
     //从远程服务器Git Clone，位置放在指定位置
-    public repository(String localPath, String remoteURL) {
+    public GitRepository(String remoteURL, String localPath) {
         this.localPath = localPath;
         this.localFilePath = new File(localPath);
         this.remoteURL = remoteURL;
+        gitClone();
     }
 
     //从github上clone代码
@@ -64,11 +64,14 @@ public class repository {
 
         //得到clone到本地的git组织
         try {
+            System.out.println("Cloning from " + remoteURL + " to " + localPath);
             git= cloneCommand.setURI(remoteURL) //设置远程URI
                     .setBranch("master") //设置clone下来的分支
                     .setDirectory(localFilePath) //设置下载存放路径
                     .setCredentialsProvider(usernamePasswordCredentialsProvider) //设置权限验证
                     .call();
+            System.out.println("Having GitRepository: " + git.getRepository().getDirectory());
+
         } catch (GitAPIException e) {
             e.printStackTrace();
         }
@@ -77,28 +80,20 @@ public class repository {
     //创建临时缓存文件存放Git Clone的仓库
     public void createTempFile() throws IOException {
         localFilePath = File.createTempFile("TestGitRepository", "");
+        localPath = localFilePath.getPath();
         if(!localFilePath.delete()) {
             throw new IOException("Could not delete temporary file " + localFilePath);
         }
     }
 
-
-    public void testClone() throws IOException, GitAPIException {
-
-        //设置远程服务器上的用户名和密码（若clone的是自己的private的仓库则需要此操作）
-        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider =new
-                UsernamePasswordCredentialsProvider("username","password");
-
-        //clone代码库命令
-        CloneCommand cloneCommand = Git.cloneRepository();
-
-        Git git= cloneCommand.setURI(remoteURL) //设置远程URI
-                .setBranch("master") //设置clone下来的分支
-                .setDirectory(new File(localPath)) //设置下载存放路径
-                //.setCredentialsProvider(usernamePasswordCredentialsProvider) //设置权限验证
-                .call();
-
-        System.out.print(git.tag());
+    public void openRepository(String URL){
+        localPath = URL;
+        localFilePath = new File(localPath);
+        try {
+            git = Git.open(localFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Git getGit() {
@@ -111,6 +106,7 @@ public class repository {
             git.close();
 //            repo.close();
             FileUtils.deleteDirectory(localFilePath);
+            System.out.println("Repository has deleted completely");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,7 +122,7 @@ public class repository {
                 .readEnvironment() // scan environment GIT_* variables
                 .findGitDir() // scan up the file system tree
                 .build()) {
-            System.out.println("Having repository: " + repository.getDirectory());
+            System.out.println("Having GitRepository: " + repository.getDirectory());
 
             // the Ref holds an ObjectId for any type of object (tree, commit, blob, tree)
             // 得到Ref后，可以做很多事情

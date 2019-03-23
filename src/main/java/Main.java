@@ -1,7 +1,6 @@
 import LOC.CalculateLOC;
-import Repository.GetRepository;
-import Repository.repository;
-import Repository.repositoryFactory;
+import Repository.GitRepository;
+import Repository.GitRepositoryFactory;
 import org.eclipse.jgit.api.Git;
 
 public class Main {
@@ -10,7 +9,9 @@ public class Main {
         String GitAddress = "https://github.com/vegetable-father-son/Inverview-Preparation.git";
 
         try {
-            repository repo = new repositoryFactory().cloneRepositoryFrom(GitAddress);
+            GitRepository repo = new GitRepositoryFactory().cloneRepositoryFrom(GitAddress); //git clone到临时目录
+//            GitRepository repo = new GitRepositoryFactory().cloneRepositoryFromTo(GitAddress,"E:\\大三下\\创新项目\\GitMiner_Codes\\Test"); //git clone到目标目录
+//            GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("F:\\GitMiner_Codes"); //获得本地项目的引用
             Git git = repo.getGit();
             if (git == null){
                 System.out.println("Git is null");
@@ -29,13 +30,13 @@ public class Main {
         /*String gitFilePath = "D:\\课程学习\\大三上\\javasub\\java-2018f-homework";
         File root = new File(gitFilePath);
         Git git = null;
-        repository repository;
+        GitRepository GitRepository;
         try{
             git = Git.open(root);
-            repository = git.getRepository();
+            GitRepository = git.getRepository();
             LOC.CalculateLOC calculateLOC = new LOC.CalculateLOC();
             calculateLOC.WorkOutLOC(git);
-            //return repository;
+            //return GitRepository;
         }catch (Exception e){
             e.printStackTrace();
         }*/
@@ -45,6 +46,6 @@ public class Main {
 
 
         //getRepository.CloseJGitRepository();
-        //repository repository = GetResponsibilty.openReposity();
+        //GitRepository GitRepository = GetResponsibilty.openReposity();
     }
 }

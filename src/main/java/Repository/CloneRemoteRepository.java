@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class CloneRemoteRepository {
     public static File CloneToLocal(String REMOTE_URL) throws IOException, GitAPIException {
-        // prepare a new folder for the cloned repository
+        // prepare a new folder for the cloned GitRepository
         File localPath = File.createTempFile("TestGitRepository", "");
         if(!localPath.delete()) {
             throw new IOException("Could not delete temporary file " + localPath);
@@ -21,8 +21,8 @@ public class CloneRemoteRepository {
                 .setURI(REMOTE_URL)
                 .setDirectory(localPath)
                 .call()) {
-            // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
-            System.out.println("Having repository: " + result.getRepository().getDirectory());
+            // Note: the call() returns an opened GitRepository already which needs to be closed to avoid file handle leaks!
+            System.out.println("Having GitRepository: " + result.getRepository().getDirectory());
         }
 
         // clean up here to not keep using more and more disk-space for these samples
