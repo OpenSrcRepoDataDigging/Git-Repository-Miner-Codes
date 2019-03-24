@@ -26,7 +26,7 @@ public class CalculateLOC {
      * 传入git信息，打印所有的LOC
      * @param g
      * Git 参数
-     * @return 
+     * @return
      * @throws Exception
      */
     public void WorkOutLOC(Git g) throws Exception{
@@ -128,4 +128,6 @@ public class CalculateLOC {
         }
         return null;
     }
+
+    public ContributorMap getContributorMap(){return contributorMap;}
 }

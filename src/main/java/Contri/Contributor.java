@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ *describe:
+ *记录一位贡献者信息：
+ * AuthorName 名字 LOC_Add_All添加的LOC，LOC_Delete_All删除的LOC
+ * 开发者commit的信息
+ *@author 欧阳
+ *@date ${2019}/${3}/${32}
+ */
+
 public class Contributor {
     private String AuthorName;
     private int LOC_Add_All;

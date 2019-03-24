@@ -1,7 +1,10 @@
+import Contri.SaveLOC2csv;
 import LOC.CalculateLOC;
 import Repository.GitRepository;
 import Repository.GitRepositoryFactory;
 import org.eclipse.jgit.api.Git;
+
+import javax.swing.plaf.synth.SynthEditorPaneUI;
 
 public class Main {
 
@@ -21,6 +24,9 @@ public class Main {
             System.out.println("Ready to calculate");
             CalculateLOC calculateLOC = new CalculateLOC();
             calculateLOC.WorkOutLOC(git);
+
+            System.out.println("Ready to save");
+            SaveLOC2csv.Save2csv(calculateLOC.getContributorMap(), "D:/");
 
             System.out.println("Ready to cancel");
             //TODO: 测试时为了速度，使用本地项目，但是记得如果用临时目录，要删除
