@@ -22,7 +22,7 @@ public class Contributor {
     private List<CommitMessages> commitList = new ArrayList<>();    //记录该开发者的Commit信息
     private HashMap<String,CommitMessages> commitMap = new HashMap<String, CommitMessages>(); //每次Commit和Commit信息的HashMap
 
-    Contributor(String authorName) {
+    public Contributor(String authorName) {
         AuthorName = authorName;
         LOC_Add_All = 0;
         LOC_Delete_All = 0;

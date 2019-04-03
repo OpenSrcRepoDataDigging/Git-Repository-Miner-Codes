@@ -1,6 +1,8 @@
 # Git-Repository-Miner-Codes
 南京大学“开源仓库代码挖掘和可视化”创新项目代码
 
+***Remember to "git fetch origin master" and "git merge origin master" before your Modification!***
+
 ## LOC文件夹
 
 一、实现功能：
