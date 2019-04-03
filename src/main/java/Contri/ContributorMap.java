@@ -12,7 +12,7 @@ import java.util.List;
 public class ContributorMap implements FileContributorMatrix{
     private HashMap<String,Contributor> maps = new HashMap<String, Contributor>();
 
-    /*  File-Contributor-LOC Matrix */
+    /*  MirageLyu: File-Contributor-LOC Matrix */
     private List<FileContributor> fileContributors = new ArrayList<>();
 
     public ContributorMap(Git git) {

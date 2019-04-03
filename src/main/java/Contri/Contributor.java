@@ -24,6 +24,7 @@ public class Contributor implements FileContributor {
     private List<CommitMessages> commitList = new ArrayList<>();    //记录该开发者的Commit信息
     private HashMap<String,CommitMessages> commitMap = new HashMap<String, CommitMessages>(); //每次Commit和Commit信息的HashMap
 
+    //MirageLyu: Every contributor has a file list(using hashmap instead), each element is the LOC on this file by this contributor.
     private HashMap<CodeFile, LOC> locfilemap = new HashMap<>();
 
     public Contributor(String authorName) {

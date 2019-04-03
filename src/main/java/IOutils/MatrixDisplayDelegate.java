@@ -1,4 +1,4 @@
-package gitutils;
+package IOutils;
 
 public class MatrixDisplayDelegate implements Display {
     public void display(){
