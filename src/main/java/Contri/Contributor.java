@@ -33,10 +33,18 @@ public class Contributor implements FileContributor {
         LOC_Delete_All = 0;
     }
 
+    @Override
+    public void insertCommitToFileMap(RevCommit commit) {
+        //TODO: walk through this commit to find: All changed files and LOC, insert to locfilemap
+
+    }
+
     public void insertRevCommit(RevCommit commit){
         CommitMessages messages = new CommitMessages(commit);
         commitList.add(messages);
         commitMap.put(commit.getName(),messages);
+
+        insertCommitToFileMap(commit);
     }
 
     public void setLOC_Add(String commitName,int LOC_Add){

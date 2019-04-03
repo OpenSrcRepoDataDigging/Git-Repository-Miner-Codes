@@ -1,5 +1,7 @@
 package Contri;
 
+import IOutils.MatrixDisplayDelegate;
+import IOutils.MatrixSaveDelegate;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -14,9 +16,18 @@ public class ContributorMap implements FileContributorMatrix{
 
     /*  MirageLyu: File-Contributor-LOC Matrix */
     private List<FileContributor> fileContributors = new ArrayList<>();
+    /*  MirageLyu: Delegate for save the Matrix */
+    private MatrixSaveDelegate matrixSaveDelegate = new MatrixSaveDelegate();
 
     public ContributorMap(Git git) {
         initMaps(git);
+        matrixSaveDelegate.setFileContributors(fileContributors);
+    }
+
+    @Override
+    public void CompressMatrix(int height, int width) {
+        //TODO: Compress the matrix to smaller size, on most lines files and most LOC contributors.
+
     }
 
     private void initMaps(Git git){
@@ -48,8 +59,13 @@ public class ContributorMap implements FileContributorMatrix{
     public Contributor getContributor(String authorName){
         return maps.getOrDefault(authorName, null);
     }
-
     public HashMap<String, Contributor> getMaps() {
         return maps;
+    }
+    public MatrixSaveDelegate getMatrixSaveDelegate() {
+        return matrixSaveDelegate;
+    }
+    public List<FileContributor> getFileContributors() {
+        return fileContributors;
     }
 }

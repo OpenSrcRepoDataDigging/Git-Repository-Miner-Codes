@@ -1,8 +1,13 @@
 package filecontributesupport;
 
+/*
+@author MirageLyu
+*
+ */
+
 public class LOC {
-    int addition;
-    int deletion;
+    private int addition;
+    private int deletion;
 
     LOC(){
         addition = 0;

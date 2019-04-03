@@ -1,9 +1,14 @@
 package filecontributesupport;
 
+/*
+@author MirageLyu
+*
+ */
+
 public class CodeFile {
-    String name;
-    int lines;
-    Language language;
+    private String name;
+    private int lines;
+    private Language language;
 
     CodeFile(String name, int lines, Language language){
         this.name = name;
