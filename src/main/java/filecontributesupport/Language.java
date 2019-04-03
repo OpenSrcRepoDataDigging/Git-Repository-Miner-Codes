@@ -1,4 +1,4 @@
-package cooperateInfo;
+package filecontributesupport;
 
 public enum Language {
     Cpp, Java, Python, CS, C, CSS, Ruby, Pascal, Swift, Markdown, HTML, Latex, Basic,

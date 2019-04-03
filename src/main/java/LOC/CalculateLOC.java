@@ -35,6 +35,7 @@ public class CalculateLOC {
         git = g;
 
         contributorMap = new ContributorMap(git); //记录作者和记录作者贡献信息映射的Map
+
         List<RevCommit> commitList = new ArrayList<>();
         Iterable<RevCommit> commits = git.log().call();
         for(RevCommit commit:commits){

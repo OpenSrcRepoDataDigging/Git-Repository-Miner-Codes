@@ -1,4 +1,4 @@
-package cooperateInfo;
+package filecontributesupport;
 
 public class CodeFile {
     String name;

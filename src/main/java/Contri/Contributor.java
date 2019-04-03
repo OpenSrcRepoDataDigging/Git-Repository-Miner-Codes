@@ -1,5 +1,7 @@
 package Contri;
 
+import filecontributesupport.CodeFile;
+import filecontributesupport.LOC;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.ArrayList;
@@ -15,12 +17,14 @@ import java.util.List;
  *@date ${2019}/${3}/${32}
  */
 
-public class Contributor {
+public class Contributor implements FileContributor {
     private String AuthorName;
     private int LOC_Add_All;
     private int LOC_Delete_All;
     private List<CommitMessages> commitList = new ArrayList<>();    //记录该开发者的Commit信息
     private HashMap<String,CommitMessages> commitMap = new HashMap<String, CommitMessages>(); //每次Commit和Commit信息的HashMap
+
+    private HashMap<CodeFile, LOC> locfilemap = new HashMap<>();
 
     public Contributor(String authorName) {
         AuthorName = authorName;

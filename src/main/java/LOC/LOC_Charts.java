@@ -59,8 +59,4 @@ public class LOC_Charts {
         frame.setBounds(50, 50, 800, 600);
         frame.setVisible(true);    }
 
-    public static void main(String args[]){
-
-    }
-
 }

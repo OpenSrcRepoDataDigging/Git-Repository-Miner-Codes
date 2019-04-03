@@ -5,10 +5,15 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class ContributorMap{
+public class ContributorMap implements FileContributorMatrix{
     private HashMap<String,Contributor> maps = new HashMap<String, Contributor>();
+
+    /*  File-Contributor-LOC Matrix */
+    private List<FileContributor> fileContributors = new ArrayList<>();
 
     public ContributorMap(Git git) {
         initMaps(git);
