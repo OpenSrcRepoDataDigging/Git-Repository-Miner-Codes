@@ -3,10 +3,12 @@ package Contri;
 import filecontributesupport.CodeFile;
 import filecontributesupport.LOC;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *describe:
@@ -25,7 +27,7 @@ public class Contributor implements FileContributor {
     private HashMap<String,CommitMessages> commitMap = new HashMap<String, CommitMessages>(); //每次Commit和Commit信息的HashMap
 
     //MirageLyu: Every contributor has a file list(using hashmap instead), each element is the LOC on this file by this contributor.
-    private HashMap<CodeFile, LOC> locfilemap = new HashMap<>();
+    private HashMap<String, LOC> locfilemap = new HashMap<>();
 
     public Contributor(String authorName) {
         AuthorName = authorName;
@@ -34,17 +36,35 @@ public class Contributor implements FileContributor {
     }
 
     @Override
-    public void insertCommitToFileMap(RevCommit commit) {
+    public void insertFileMap(String cf, LOC loc) {
         //TODO: walk through this commit to find: All changed files and LOC, insert to locfilemap
+        if(locfilemap.get(cf) != null){
+            locfilemap.get(cf).addAddition(loc.getAddition()).addDeletion(loc.getDeletion());
+        }else{
+            locfilemap.put(cf, loc);
+        }
+    }
 
+    @Override
+    public FileContributor changeFilePathNameInMap(String oldpath, String newpath) {
+        //TODO: update the name of mode to new path name
+        if(!oldpath.equals(newpath)){
+            locfilemap.put(newpath, locfilemap.get(oldpath));
+            locfilemap.remove(oldpath);
+        }
+        return this;
+    }
+
+    @Override
+    public boolean isInsideMap(String filename) {
+        //TODO: whether the mode is inside the file-contributor map
+        return locfilemap.get(filename) != null;
     }
 
     public void insertRevCommit(RevCommit commit){
         CommitMessages messages = new CommitMessages(commit);
         commitList.add(messages);
         commitMap.put(commit.getName(),messages);
-
-        insertCommitToFileMap(commit);
     }
 
     public void setLOC_Add(String commitName,int LOC_Add){
@@ -69,9 +89,13 @@ public class Contributor implements FileContributor {
         System.out.println("Contributor Name: "+ this.AuthorName);
         System.out.println("\033[32;1m" + "LOC++:" + LOC_Add_All + "\033[0m");
         System.out.println("\033[31;1m" + "LOC--:" + LOC_Delete_All + "\033[0m");
-        commitList.forEach(c -> {
-            c.displayMessages();
-        });
+
+        System.out.println("FileList:  ");
+        for(Map.Entry<String, LOC> entry : locfilemap.entrySet()){
+            System.out.println(entry.getKey() + ":  " + entry.getValue().getAddition() + "/" + entry.getValue().getDeletion());
+        }
+
+        //commitList.forEach(CommitMessages::displayMessages);
         System.out.println("---------------End-----------------------------");
     }
 

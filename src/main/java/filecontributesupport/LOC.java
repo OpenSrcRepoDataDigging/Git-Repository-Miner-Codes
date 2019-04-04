@@ -9,21 +9,23 @@ public class LOC {
     private int addition;
     private int deletion;
 
-    LOC(){
+    public LOC(){
         addition = 0;
         deletion = 0;
     }
 
-    LOC(int addition, int deletion){
+    public LOC(int addition, int deletion){
         this.addition = addition;
         this.deletion = deletion;
     }
 
-    public void addAddition(int diff){
+    public LOC addAddition(int diff){
         this.addition += diff;
+        return this;
     }
-    public void addDeletion(int diff){
+    public LOC addDeletion(int diff){
         this.deletion += diff;
+        return this;
     }
 
 

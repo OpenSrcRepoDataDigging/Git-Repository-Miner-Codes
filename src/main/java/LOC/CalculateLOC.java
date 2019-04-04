@@ -1,6 +1,8 @@
 package LOC;
 
 import Contri.ContributorMap;
+import Contri.FileContributor;
+import filecontributesupport.LOC;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.*;
 import org.eclipse.jgit.lib.ObjectReader;
@@ -43,7 +45,8 @@ public class CalculateLOC {
         }
         for(int i = 0; i < commitList.size() - 1; i++)
         {
-            System.out.println("\033[31;1m" + "=======================This is the " + i + "th Commit======================="+"\033[0m");
+            System.out.println("COMMIT: " + i);
+            //System.out.println("\033[31;1m" + "=======================This is the " + i + "th Commit======================="+"\033[0m");
             ShowLOC(commitList.get(i), commitList.get(i + 1));
         }
         if(commitList.size() == 2)
@@ -52,8 +55,8 @@ public class CalculateLOC {
         contributorMap.getMaps().forEach((author,commitMessage)->{
             commitMessage.dispalyContributorMessages();
         });
-        LOC_Charts charts = new LOC_Charts(contributorMap);
-        charts.drawChartPanel();
+        //LOC_Charts charts = new LOC_Charts(contributorMap);
+        //charts.drawChartPanel();
     }
 
 
@@ -76,13 +79,19 @@ public class CalculateLOC {
         //忽略空白字符的对比
         diffFormatter.setDiffComparator(RawTextComparator.WS_IGNORE_ALL);
         diffFormatter.setRepository(git.getRepository());
-        System.out.println("------------------------------start-----------------------------");
+        //System.out.println("------------------------------start-----------------------------");
         //每一个都是一个文件版本之间的变动差异
         for(DiffEntry diffEntry : diff){
             //打印具体内容
-            diffFormatter.format(diffEntry);
-            String diffText = out.toString("UTF-8");
-            System.out.println(diffText);
+
+            //MirageLyu: Show modified filenames here.
+            //Path: Can be used as filename: and modify the filename in File-Contributor map.
+            //System.out.println("Old Path: " + diffEntry.getOldPath());
+            //System.out.println("New Path: " + diffEntry.getNewPath());
+
+            //diffFormatter.format(diffEntry);
+            //String diffText = out.toString("UTF-8");
+            //System.out.println(diffText);
 
             //获取差异的位置，从而统计差异行数
             FileHeader fileHeader = diffFormatter.toFileHeader(diffEntry);
@@ -96,11 +105,28 @@ public class CalculateLOC {
                     addSize += edit.getEndB() - edit.getBeginB();
                 }
             }
-            System.out.println("\033[32;1m" + "++" + addSize + "\033[0m");
-            System.out.println("\033[31;1m" + "--" + subSize + "\033[0m");
+
+            //MirageLyu: Insert map element to this contributor.
+            /* TODO:
+            *       if not inside, just insert;
+            *       if inside, update mode name first, then update LOC
+            * */
+            String oldpath = diffEntry.getOldPath(), newpath = diffEntry.getNewPath();
+            FileContributor curContributor = contributorMap.getContributor(revCommit.getAuthorIdent().getName());
+            if(curContributor.isInsideMap(oldpath)){
+                curContributor.changeFilePathNameInMap(oldpath, newpath).insertFileMap(newpath, new LOC(addSize, subSize));
+            }
+            else{
+                curContributor.insertFileMap(newpath, new LOC(addSize, subSize));
+            }
+
+
+
+            //System.out.println("\033[32;1m" + "++" + addSize + "\033[0m");
+            //System.out.println("\033[31;1m" + "--" + subSize + "\033[0m");
             contributorMap.getContributor(revCommit.getAuthorIdent().getName()).setLOC_Add(revCommit.getName(),addSize);
             contributorMap.getContributor(revCommit.getAuthorIdent().getName()).setLOC_Delete(revCommit.getName(),subSize);
-            System.out.println("----------------end-----------------");
+            //System.out.println("----------------end-----------------");
             out.reset();
         }
     }
@@ -112,10 +138,10 @@ public class CalculateLOC {
      * @throws Exception
      */
     private AbstractTreeIterator prepareTreeParser(RevCommit revCommit) {
-        System.out.println("----------------prepare Tree Parse ----------------");
-        System.out.println(revCommit.getId());
+        //System.out.println("----------------prepare Tree Parse ----------------");
+        //System.out.println(revCommit.getId());
         try(RevWalk walk = new RevWalk(git.getRepository())){
-            System.out.println(revCommit.getTree().getId());
+            //System.out.println(revCommit.getTree().getId());
             RevTree tree = walk.parseTree(revCommit.getTree().getId());
 
             CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
