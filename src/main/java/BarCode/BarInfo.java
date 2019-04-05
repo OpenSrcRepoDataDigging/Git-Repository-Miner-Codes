@@ -21,6 +21,10 @@ public class BarInfo {
         this.commitTimes++;
     }
 
+    public int getCommitTimes() {
+        return commitTimes;
+    }
+
     @Override
     public String toString() {
         return "BarInfo{" +
