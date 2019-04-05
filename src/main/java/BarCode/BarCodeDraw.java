@@ -48,6 +48,8 @@ public class BarCodeDraw {
         //到这里结束，虽然代码有点多，但只为一个目的，解决汉字乱码问题
 
         frame1=new ChartPanel(chart,true);        //这里也可以用chartFrame,可以直接生成一个独立的Frame
+
+        //保存成图片
         String saveName = barCode.commitMsgs.get(0).getAuthorName();
         File file = new File(saveName+".png");
         try {
@@ -59,8 +61,8 @@ public class BarCodeDraw {
     private static CategoryDataset getDataSet(BarCode barCode) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        barCode.barcode.forEach((time,info)->{
-            dataset.addValue(info.getCommitTimes(),"提交次数",dateFormat.format(time));
+        barCode.barNodeList.forEach((node)->{
+            dataset.addValue(node.info.getCommitTimes(),"提交次数",dateFormat.format(node.date));
         });
         return dataset;
     }
