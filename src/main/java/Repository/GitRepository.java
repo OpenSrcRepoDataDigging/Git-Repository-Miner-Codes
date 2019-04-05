@@ -1,5 +1,6 @@
 package Repository;
 
+import Contri.ContributorMap;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
@@ -16,13 +17,22 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-
+/*
+* @Author: Young
+* @Description: 该类记录一个Git仓库的信息，可以从远程克隆，也可以打开本地仓库。
+*               主要变量有两个：
+*               1.git：顾名思义
+*               2.contributorMap：在该类初始化时则建好，本质是HashMap<String,Contributor>，通过贡献者名字（或许考虑用邮箱）的字符串来访问贡献者
+*                   从而访问其各种Commit信息
+* */
 public class GitRepository {
 
     private Git git;
     private String localPath;
     private String remoteURL;
     private File localFilePath;
+    ContributorMap contributorMap; //记录作者和记录作者贡献信息映射的Map，每个GitRepository都维护一个该Map
+
 
     //type == 0，则从远程服务器Git Clone，位置放在默认的缓存
     //type == 1，则直接打开本地路径上的Git 仓库
@@ -43,6 +53,7 @@ public class GitRepository {
                 break;
             }
         }
+        contributorMap = new ContributorMap(git); //记录作者和记录作者贡献信息映射的Map
     }
 
     //从远程服务器Git Clone，位置放在指定位置
@@ -98,6 +109,10 @@ public class GitRepository {
 
     public Git getGit() {
         return git;
+    }
+
+    public ContributorMap getContributorMap() {
+        return contributorMap;
     }
 
     public void deleteRepository(){

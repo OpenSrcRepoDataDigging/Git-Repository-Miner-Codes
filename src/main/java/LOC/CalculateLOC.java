@@ -2,6 +2,7 @@ package LOC;
 
 import Contri.ContributorMap;
 import Contri.FileContributor;
+import Repository.GitRepository;
 import filecontributesupport.LOC;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.*;
@@ -18,26 +19,40 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * @Author: Young
+ * @Description: 该类记录一个Git仓库的信息，可以从远程克隆，也可以打开本地仓库。
+ *               主要变量有两个：
+ *               1.git：顾名思义
+ *               2.contributorMap：在该类初始化时则建好，本质是HashMap<String,Contributor>，通过贡献者名字（或许考虑用邮箱）的字符串来访问贡献者
+ *                   从而访问其各种Commit信息
+ * */
 public class CalculateLOC {
     private Git git;
+<<<<<<< HEAD
     private ContributorMap contributorMap; //记录作者和记录作者贡献信息映射的Map，前期写在这里，后期得换个地方整合
     public CalculateLOC(){
 
+=======
+    ContributorMap contributorMap; //记录作者和记录作者贡献信息映射的Map，前期写在这里，后期得换个地方整合
+    public CalculateLOC(GitRepository repo){
+        this.git = repo.getGit();
+        this.contributorMap = repo.getContributorMap();
+        System.out.println("CalculateLOC启动，得到contributorMap，Size为："+contributorMap.getMaps().size());
+>>>>>>> origin
     }
 
     /**
-     * 传入git信息，打印所有的LOC
-     * @param g
-     * Git 参数
+     * 打印所有的LOC
+     * @param
      * @return
      * @throws Exception
      */
-    public void WorkOutLOC(Git g) throws Exception{
-        if(g == null)
+    public void WorkOutLOC() throws Exception{
+        if(git == null){
+            System.out.println("git is null");
             return;
-        git = g;
-
-        contributorMap = new ContributorMap(git); //记录作者和记录作者贡献信息映射的Map
+        }
 
         List<RevCommit> commitList = new ArrayList<>();
         Iterable<RevCommit> commits = git.log().call();
@@ -56,8 +71,8 @@ public class CalculateLOC {
         contributorMap.getMaps().forEach((author,commitMessage)->{
             commitMessage.dispalyContributorMessages();
         });
-        //LOC_Charts charts = new LOC_Charts(contributorMap);
-        //charts.drawChartPanel();
+//        LOC_Charts charts = new LOC_Charts(contributorMap);
+//        charts.drawChartPanel();
     }
 
 

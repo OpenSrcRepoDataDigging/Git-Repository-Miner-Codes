@@ -7,8 +7,18 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
+<<<<<<< HEAD
 import java.util.*;
 
+=======
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+/*
+ * @Author: Young，MirageLyu
+ * @Description: 该类主要负责建立贡献者String和贡献者的索引
+ * */
+>>>>>>> origin
 public class ContributorMap implements FileContributorMatrix{
     private HashMap<String,Contributor> maps = new HashMap<String, Contributor>();
 
