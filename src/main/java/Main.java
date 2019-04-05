@@ -26,7 +26,7 @@ public class Main {
             calculateLOC.WorkOutLOC(git);
 
             System.out.println("Ready to save");
-            //SaveLOC2csv.Save2csv(calculateLOC.getContributorMap(), "D:/");
+            SaveLOC2csv.Save2csv(calculateLOC.getContributorMap(), "D:/");
 
             System.out.println("Ready to cancel");
             //TODO: 测试时为了速度，使用本地项目，但是记得如果用临时目录，要删除

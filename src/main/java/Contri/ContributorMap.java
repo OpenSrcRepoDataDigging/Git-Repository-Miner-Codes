@@ -21,13 +21,21 @@ public class ContributorMap implements FileContributorMatrix{
 
     public ContributorMap(Git git) {
         initMaps(git);
+
+        /* Initialize properties of the Save Delegate: 1.Contributor List; 2.Save FilePath */
         matrixSaveDelegate.setFileContributors(fileContributors);
+        matrixSaveDelegate.setFilepath("D:\\JGIT_Output\\" + git.toString() + ".csv");
     }
 
     @Override
-    public void CompressMatrix(int height, int width) {
+    public void compressMatrix(int height, int width) {
         //TODO: Compress the matrix to smaller size, on most lines files and most LOC contributors.
 
+    }
+
+    @Override
+    public void insertFileContributor(FileContributor fc) {
+        fileContributors.add(fc);
     }
 
     private void initMaps(Git git){
@@ -41,6 +49,11 @@ public class ContributorMap implements FileContributorMatrix{
                     getContributor(name).insertRevCommit(commit);
                 }else{
                     Contributor author = new Contributor(name);
+
+                    //MirageLyu: insert the reference of author to filecontributor list.
+                    insertFileContributor(author);
+
+
                     author.insertRevCommit(commit);
                     this.bindContributor(name,author);
                 }

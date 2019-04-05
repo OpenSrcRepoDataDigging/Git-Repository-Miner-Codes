@@ -6,5 +6,7 @@ package Contri;
  */
 
 public interface FileContributorMatrix {
-    public void CompressMatrix(int height, int width);
+    public void compressMatrix(int height, int width);
+
+    public void insertFileContributor(FileContributor fc);
 }
