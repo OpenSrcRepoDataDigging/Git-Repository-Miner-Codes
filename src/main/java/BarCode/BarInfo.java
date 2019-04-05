@@ -10,7 +10,7 @@ public class BarInfo {
     private int LOC; //FIXME:这里根据条形码的初始定义，先按照提交次数来确定
 
     public BarInfo() {
-        this.commitTimes = 1;
+        this.commitTimes = 0;
     }
 
     public void addTimes(int add) {

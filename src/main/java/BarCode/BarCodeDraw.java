@@ -3,6 +3,8 @@ package BarCode;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import Contri.ContributorMap;
 import org.jfree.chart.ChartFactory;
@@ -56,9 +58,9 @@ public class BarCodeDraw {
     }
     private static CategoryDataset getDataSet(BarCode barCode) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         barCode.barcode.forEach((time,info)->{
-            dataset.addValue(info.getCommitTimes(),"提交次数",time);
+            dataset.addValue(info.getCommitTimes(),"提交次数",dateFormat.format(time));
         });
         return dataset;
     }
