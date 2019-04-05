@@ -13,6 +13,7 @@ public class CommitMessages {
     //Commit的固有属性
     private Date CommitTime;
     private String CommitMsg;
+    private String authorName;
     //需要比较才有的数据
     private int LOC_Add;
     private int LOC_Delete;
@@ -21,6 +22,7 @@ public class CommitMessages {
         this.commit = commit;
         this.CommitTime = commit.getAuthorIdent().getWhen();
         this.CommitMsg = commit.getFullMessage();
+        this.authorName = commit.getAuthorIdent().getName();
         this.LOC_Add = 0;
         this.LOC_Delete = 0;
     }
@@ -39,6 +41,10 @@ public class CommitMessages {
 
     public String getCommitMsg() {
         return CommitMsg;
+    }
+
+    public String getAuthorName() {
+        return authorName;
     }
 
     public void displayMessages(){

@@ -1,6 +1,7 @@
 package Repository;
 
 import BarCode.BarCode;
+import BarCode.BarCodeDraw;
 import Contri.ContributorMap;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -24,6 +25,8 @@ public class CommitMessageTypeTest {
             BarCode bar = new BarCode(contributor.getCommitList());
             System.out.println(bar);
             System.out.println("------------");
+            BarCodeDraw barCodeDraw = new BarCodeDraw(bar);
+            barCodeDraw.drawChartPanel();
         });
     }
 }
