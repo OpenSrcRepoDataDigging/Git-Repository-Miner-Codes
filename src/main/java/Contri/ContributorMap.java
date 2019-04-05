@@ -10,7 +10,10 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+/*
+ * @Author: Young，MirageLyu
+ * @Description: 该类主要负责建立贡献者String和贡献者的索引
+ * */
 public class ContributorMap implements FileContributorMatrix{
     private HashMap<String,Contributor> maps = new HashMap<String, Contributor>();
 
