@@ -36,6 +36,21 @@ public class Contributor implements FileContributor {
     }
 
     @Override
+    public String getName() {
+        return this.AuthorName;
+    }
+
+    @Override
+    public int getAllLOC() {
+        return LOC_Add_All + LOC_Delete_All;
+    }
+
+    @Override
+    public HashMap<String, LOC> getMap() {
+        return locfilemap;
+    }
+
+    @Override
     public void insertFileMap(String cf, LOC loc) {
         //TODO: walk through this commit to find: All changed files and LOC, insert to locfilemap
         if(locfilemap.get(cf) != null){

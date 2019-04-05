@@ -12,6 +12,15 @@ import javax.swing.plaf.synth.SynthEditorPaneUI;
 public class Main {
 
     public static void main(String args[]) {
+<<<<<<< HEAD
+        String GitAddress = "https://github.com/Microsoft/microsoft.github.io.git";
+//        String GitAddress = "https://github.com/OpenSrcRepoDataDigging/DailyLog.git";
+
+        try {
+            //GitRepository repo = new GitRepositoryFactory().cloneRepositoryFrom(GitAddress); //git clone到临时目录
+            //GitRepository repo = new GitRepositoryFactory().cloneRepositoryFromTo(GitAddress,"E:\\GitMiner_Codes\\Test\\ms"); //git clone到目标目录
+            GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\GitMiner_Codes\\Test"); //获得本地项目的引用
+=======
 //        String GitAddress = "https://github.com/MirageLyu/alluxio.git";
         String GitAddress = "https://github.com/OpenSrcRepoDataDigging/DailyLog.git";
 
@@ -19,6 +28,7 @@ public class Main {
 //            GitRepository repo = new GitRepositoryFactory().cloneRepositoryFrom(GitAddress); //git clone到临时目录
 //            GitRepository repo = new GitRepositoryFactory().cloneRepositoryFromTo(GitAddress,"E:\\GitMiner_Codes\\Test"); //git clone到目标目录
             GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("D:/课程学习/大三下/大数据实验/HW1/alluxio"); //获得本地项目的引用
+>>>>>>> origin
             Git git = repo.getGit();
             if (git == null){
                 System.out.println("Git is null");
@@ -31,13 +41,19 @@ public class Main {
             CalculateLOC calculateLOC = new CalculateLOC(repo);
             calculateLOC.WorkOutLOC();
 
-            System.out.println("Ready to save");
+            calculateLOC.getContributorMap().compressMatrix(100,1000).getMatrixSaveDelegate().save();
+
+            //System.out.println("Ready to save");
             //SaveLOC2csv.Save2csv(calculateLOC.getContributorMap(), "D:/");
 
+<<<<<<< HEAD
+            //System.out.println("Ready to cancel");
+=======
             System.out.println("Ready to cancel");*/
 
             LauchCommitKeyWord.Lauch(git);
 
+>>>>>>> origin
             //TODO: 测试时为了速度，使用本地项目，但是记得如果用临时目录，要删除
             //repo.deleteRepository();
         }catch (Exception e){
