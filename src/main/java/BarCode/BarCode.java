@@ -58,7 +58,7 @@ public class BarCode {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String startTime = dateFormat.format(minDate);
         //FIXME:Java有个2017的提交太毒瘤，让条形码很恶心所以这里测试用改一下
-        startTime = "2018-09-09";
+//        startTime = "2018-09-09";
         //TODO:Java有个2017的提交太毒瘤，让条形码很恶心所以这里测试用改一下
         String endTime = dateFormat.format(maxDate);
         try {

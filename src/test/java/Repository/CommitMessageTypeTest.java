@@ -17,21 +17,17 @@ public class CommitMessageTypeTest {
 
     @Test
     public void testTpye(){
-        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三上\\JAVA程序设计\\java-2018f-homework"); //获得本地项目的引用
-//        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\Git-Repository-Miner-Codes"); //获得本地项目的引用
-//        ContributorMap contributorMap = repo.getContributorMap();
-//        contributorMap.getMaps().forEach((author,contributor)->{
-//            System.out.println("Author:"+author);
-//            contributor.getCommitList().forEach(msg->{
-//                System.out.println(msg.getCommitTime());
-//            });
-//            BarCode bar = new BarCode(contributor.getCommitList());
-//            System.out.println(bar);
-//            System.out.println("------------");
-//            BarCodeDraw barCodeDraw = new BarCodeDraw(bar);
-//            barCodeDraw.drawChartPanel();
-//        });
+//        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三上\\JAVA程序设计\\java-2018f-homework"); //获得本地项目的引用
+        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\Git-Repository-Miner-Codes"); //获得本地项目的引用
+//        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\alluxio"); //获得本地项目的引用
 
+        AllContribution(repo);
+
+
+
+    }
+
+    void AllContribution(GitRepository repo){
         List<CommitMessages> commitList = new ArrayList<>();    //记录该开发者的Commit信息
         Iterable<RevCommit> commits = null;
         try {
@@ -47,5 +43,20 @@ public class CommitMessageTypeTest {
         System.out.println("------------");
         BarCodeDraw barCodeDraw = new BarCodeDraw(bar);
         barCodeDraw.drawChartPanel();
+    }
+
+    void EachContribution(GitRepository repo){
+        ContributorMap contributorMap = repo.getContributorMap();
+        contributorMap.getMaps().forEach((author,contributor)->{
+            System.out.println("Author:"+author);
+            contributor.getCommitList().forEach(msg->{
+                System.out.println(msg.getCommitTime());
+            });
+            BarCode bar = new BarCode(contributor.getCommitList());
+            System.out.println(bar);
+            System.out.println("------------");
+            BarCodeDraw barCodeDraw = new BarCodeDraw(bar);
+            barCodeDraw.drawChartPanel();
+        });
     }
 }

@@ -20,8 +20,15 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 
+/*
+ * @Author: Young
+ * @Description: 绘制条形码图
+ */
 public class BarCodeDraw {
     ChartPanel frame1;
+    static int height = 600;
+    static int width = 800;
+
     public  BarCodeDraw(BarCode barCode){
         CategoryDataset dataset = getDataSet(barCode);
         JFreeChart chart = ChartFactory.createBarChart(
@@ -53,7 +60,7 @@ public class BarCodeDraw {
         String saveName = barCode.commitMsgs.get(0).getAuthorName();
         File file = new File(saveName+".png");
         try {
-            ChartUtilities.saveChartAsJPEG(file, chart, 800, 600);
+            ChartUtilities.saveChartAsJPEG(file, chart, width, height);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,7 +76,7 @@ public class BarCodeDraw {
     public void drawChartPanel(){
         JFrame frame=new JFrame("Java数据统计图");
         frame.add(frame1);           //添加柱形图
-        frame.setBounds(50, 50, 800, 600);
+        frame.setBounds(50, 50, width, height);
         frame.setVisible(true);
     }
 }
