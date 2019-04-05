@@ -36,7 +36,7 @@ public class Main {
 
             System.out.println("Ready to cancel");*/
 
-            LauchCommitKeyWord.Lauch(git);
+            LauchCommitLife.Lauch(git);
 
             //TODO: 测试时为了速度，使用本地项目，但是记得如果用临时目录，要删除
             //repo.deleteRepository();

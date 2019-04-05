@@ -54,3 +54,13 @@
 
 - [ ] 关键字的划分？
 
+
+#### 四、完成的图表：
+（1）每个Commit的关键词统计。参见CommitKeyWord包  
+表格A：每个Commit的各个关键词，未来或用于贡献度计算。  
+表格B：一个仓库随时间的Commit变化及关键词变化，未来或用于贡献度计算。  
+![avatar](src/figure/CommitKeyWord.png)
+
+(2)LOC的计算
+
+
