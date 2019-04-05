@@ -24,7 +24,7 @@ public class BarCodeDraw {
     ChartPanel frame1;
     public  BarCodeDraw(BarCode barCode){
         CategoryDataset dataset = getDataSet(barCode);
-        JFreeChart chart = ChartFactory.createBarChart3D(
+        JFreeChart chart = ChartFactory.createBarChart(
                 "Commit条形码", // 图表标题
                 "时间", // 目录轴的显示标签
                 "Commit次数", // 数值轴的显示标签
