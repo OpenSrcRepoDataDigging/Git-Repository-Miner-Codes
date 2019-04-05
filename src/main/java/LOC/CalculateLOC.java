@@ -29,8 +29,8 @@ import java.util.List;
  * */
 public class CalculateLOC {
     private Git git;
-
-    ContributorMap contributorMap; //记录作者和记录作者贡献信息映射的Map，前期写在这里，后期得换个地方整合
+    private ContributorMap contributorMap; //记录作者和记录作者贡献信息映射的Map，前期写在这里，后期得换个地方整合
+    public CalculateLOC() {}
     public CalculateLOC(GitRepository repo){
         this.git = repo.getGit();
         this.contributorMap = repo.getContributorMap();
