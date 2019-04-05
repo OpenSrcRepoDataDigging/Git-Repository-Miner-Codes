@@ -11,6 +11,9 @@
 .springBeans
 .sts4-cache
 
+### MAIN ###
+Main.java
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -28,3 +31,7 @@
 
 ### tjw ###
 /src/main/resources/application.properties
+Adit Madan.png
+LeoDarcy.png
+MirageLyu.png
+Young.png

@@ -36,6 +36,21 @@ public class Contributor implements FileContributor {
     }
 
     @Override
+    public String getName() {
+        return this.AuthorName;
+    }
+
+    @Override
+    public int getAllLOC() {
+        return LOC_Add_All + LOC_Delete_All;
+    }
+
+    @Override
+    public HashMap<String, LOC> getMap() {
+        return locfilemap;
+    }
+
+    @Override
     public void insertFileMap(String cf, LOC loc) {
         //TODO: walk through this commit to find: All changed files and LOC, insert to locfilemap
         if(locfilemap.get(cf) != null){
@@ -77,12 +92,16 @@ public class Contributor implements FileContributor {
         LOC_Delete_All += LOC_Delete;
     }
 
+
+    // GET方法集合
     public int getLOC_Add_All() {
         return LOC_Add_All;
     }
-
     public int getLOC_Delete_All() {
         return LOC_Delete_All;
+    }
+    public List<CommitMessages> getCommitList() {
+        return commitList;
     }
 
     public void dispalyContributorMessages(){
@@ -94,8 +113,8 @@ public class Contributor implements FileContributor {
         for(Map.Entry<String, LOC> entry : locfilemap.entrySet()){
             System.out.println(entry.getKey() + ":  " + entry.getValue().getAddition() + "/" + entry.getValue().getDeletion());
         }
-
-        //commitList.forEach(CommitMessages::displayMessages);
+        System.out.println("---------------Commit Messages-----------------------------");
+        commitList.forEach(CommitMessages::displayMessages);
         System.out.println("---------------End-----------------------------");
     }
 
