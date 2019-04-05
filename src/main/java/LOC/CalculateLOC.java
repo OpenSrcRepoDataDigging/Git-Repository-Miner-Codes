@@ -20,10 +20,11 @@ import java.util.List;
 
 public class CalculateLOC {
     private Git git;
-    ContributorMap contributorMap; //记录作者和记录作者贡献信息映射的Map，前期写在这里，后期得换个地方整合
+    private ContributorMap contributorMap; //记录作者和记录作者贡献信息映射的Map，前期写在这里，后期得换个地方整合
     public CalculateLOC(){
 
     }
+
     /**
      * 传入git信息，打印所有的LOC
      * @param g
@@ -110,8 +111,20 @@ public class CalculateLOC {
             /* TODO:
             *       if not inside, just insert;
             *       if inside, update mode name first, then update LOC
+            *
+            *       Simultaneously, insert the filename to filelist.
             * */
             String oldpath = diffEntry.getOldPath(), newpath = diffEntry.getNewPath();
+            if(!oldpath.equals(newpath)){
+                contributorMap.removeFileFromFileList(oldpath);
+                contributorMap.insertFileToFileList(newpath);
+                contributorMap.renameFileNameInFileLOCMap(oldpath, newpath);
+                contributorMap.insertFileLOCPairToMap(newpath, new LOC(addSize, subSize));
+            }
+            else{
+                contributorMap.insertFileToFileList(newpath);
+                contributorMap.insertFileLOCPairToMap(newpath, new LOC(addSize, subSize));
+            }
             FileContributor curContributor = contributorMap.getContributor(revCommit.getAuthorIdent().getName());
             if(curContributor.isInsideMap(oldpath)){
                 curContributor.changeFilePathNameInMap(oldpath, newpath).insertFileMap(newpath, new LOC(addSize, subSize));
