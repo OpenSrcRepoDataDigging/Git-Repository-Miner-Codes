@@ -14,12 +14,12 @@ public class BarCode {
     List<CommitMessages> commitMsgs;
     HashMap<Date,BarInfo> barcode;
 
-    @Deprecated
     public BarCode(List<CommitMessages> commitMsgs) {
         this.commitMsgs = commitMsgs;
         barcode = new HashMap<Date, BarInfo>();
         commitMsgs.forEach(msg->{
             Date date = msg.getCommitTime();
+            //FIXME:为了便于统计，强制把时分秒清零了...
             date.setHours(0);
             date.setMinutes(0);
             date.setSeconds(0);
