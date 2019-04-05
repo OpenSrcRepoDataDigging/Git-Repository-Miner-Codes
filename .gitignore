@@ -11,6 +11,9 @@
 .springBeans
 .sts4-cache
 
+### MAIN ###
+Main.java
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
