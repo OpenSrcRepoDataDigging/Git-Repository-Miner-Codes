@@ -20,11 +20,18 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 
+/*
+ * @Author: Young
+ * @Description: 绘制条形码图
+ */
 public class BarCodeDraw {
     ChartPanel frame1;
+    static int height = 600;
+    static int width = 800;
+
     public  BarCodeDraw(BarCode barCode){
         CategoryDataset dataset = getDataSet(barCode);
-        JFreeChart chart = ChartFactory.createBarChart3D(
+        JFreeChart chart = ChartFactory.createBarChart(
                 "Commit条形码", // 图表标题
                 "时间", // 目录轴的显示标签
                 "Commit次数", // 数值轴的显示标签
@@ -48,10 +55,12 @@ public class BarCodeDraw {
         //到这里结束，虽然代码有点多，但只为一个目的，解决汉字乱码问题
 
         frame1=new ChartPanel(chart,true);        //这里也可以用chartFrame,可以直接生成一个独立的Frame
+
+        //保存成图片
         String saveName = barCode.commitMsgs.get(0).getAuthorName();
         File file = new File(saveName+".png");
         try {
-            ChartUtilities.saveChartAsJPEG(file, chart, 800, 600);
+            ChartUtilities.saveChartAsJPEG(file, chart, width, height);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,15 +68,15 @@ public class BarCodeDraw {
     private static CategoryDataset getDataSet(BarCode barCode) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        barCode.barcode.forEach((time,info)->{
-            dataset.addValue(info.getCommitTimes(),"提交次数",dateFormat.format(time));
+        barCode.barNodeList.forEach((node)->{
+            dataset.addValue(node.info.getCommitTimes(),"提交次数",dateFormat.format(node.date));
         });
         return dataset;
     }
     public void drawChartPanel(){
         JFrame frame=new JFrame("Java数据统计图");
         frame.add(frame1);           //添加柱形图
-        frame.setBounds(50, 50, 800, 600);
+        frame.setBounds(50, 50, width, height);
         frame.setVisible(true);
     }
 }
