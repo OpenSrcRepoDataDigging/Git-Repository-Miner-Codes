@@ -5,6 +5,9 @@ import BarCode.BarCodeDraw;
 import BarCode.BarCodeSave;
 import Contri.CommitMessages;
 import Contri.ContributorMap;
+import FirstCommit.CommitTimesNode;
+import FirstCommit.FirstCommitNode;
+import FirstCommit.getFirstCommitTimesList;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -12,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +29,7 @@ public class CommitMessageTypeTest {
 
 //        AllContribution(repo);
         GetAllAndEachContribution(repo);
-
+//        getFirstCommitLogs(repo);
 
     }
 
@@ -97,4 +101,12 @@ public class CommitMessageTypeTest {
         BarCodeSave saveBar = new BarCodeSave(barCodeArrayList);
         saveBar.SaveBarCode(repo.getGit().getRepository().getDirectory().getParentFile().getName()+".csv");
     }
+
+    void getFirstCommitLogs(GitRepository repo){
+        getFirstCommitTimesList fsList = new getFirstCommitTimesList(repo);
+        fsList.getCtList();
+        fsList.saveFirstTimeList();
+
+    }
+
 }

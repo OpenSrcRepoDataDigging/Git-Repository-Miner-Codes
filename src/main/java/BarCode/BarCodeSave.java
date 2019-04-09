@@ -68,6 +68,20 @@ public class BarCodeSave {
                 e.printStackTrace();
             }
         }
+        int authorSize = barCodeList.size(); //一共有多少个人（默认第一个为全部）
+        try {
+            csvWriter.write("Summary");
+            for(int j=0;j<barCodeList.size();j++){
+                try {
+                    csvWriter.write(String.valueOf(barCodeList.get(j).getAllMsgReg().getCommitTimes()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            csvWriter.endRecord();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         csvWriter.close();
         System.out.println("Finish Save BarCode");

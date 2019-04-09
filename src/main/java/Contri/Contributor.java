@@ -5,10 +5,7 @@ import filecontributesupport.LOC;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *describe:
@@ -25,6 +22,7 @@ public class Contributor implements FileContributor {
     private int LOC_Delete_All;
     private List<CommitMessages> commitList = new ArrayList<>();    //记录该开发者的Commit信息
     private HashMap<String,CommitMessages> commitMap = new HashMap<String, CommitMessages>(); //每次Commit和Commit信息的HashMap
+    private Date firstCommitTime;
 
     //MirageLyu: Every contributor has a file list(using hashmap instead), each element is the LOC on this file by this contributor.
     private HashMap<String, LOC> locfilemap = new HashMap<>();
@@ -33,6 +31,7 @@ public class Contributor implements FileContributor {
         AuthorName = authorName;
         LOC_Add_All = 0;
         LOC_Delete_All = 0;
+        firstCommitTime = null;
     }
 
     @Override
@@ -102,6 +101,26 @@ public class Contributor implements FileContributor {
     }
     public List<CommitMessages> getCommitList() {
         return commitList;
+    }
+
+    public Date getFirstCommitTime(){
+        if(firstCommitTime!=null){
+            return firstCommitTime;
+        }else{
+            Date res = commitList.get(0).getCommitTime();
+            int earliestIndex = 0;
+            for(int i=0;i<commitList.size();i++){
+                if(commitList.get(i).getCommitTime().before(res)){
+                    res = commitList.get(i).getCommitTime();
+                    earliestIndex = i;
+                }
+            }
+            if(earliestIndex!=(commitList.size()-1)){
+                System.out.println("最早的提交不是放在最后面");
+            }
+            firstCommitTime = res;
+            return firstCommitTime;
+        }
     }
 
     public void dispalyContributorMessages(){
