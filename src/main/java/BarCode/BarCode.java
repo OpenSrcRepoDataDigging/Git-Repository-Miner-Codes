@@ -15,12 +15,20 @@ public class BarCode {
     List<CommitMessages> commitMsgs;
     HashMap<Date,BarInfo> barcode;
     List<BarNode> barNodeList;
-    Date minDate;
-    Date maxDate;
+    Date minDate;   //条形码起始日期
+    Date maxDate;   //条形码终止日期
+    boolean setScale; //是否设定起始和终止日期
+    BarInfo allMsgReg; //记录总和信息
 
-    public BarCode(List<CommitMessages> commitMsgs) {
+    public BarCode(List<CommitMessages> commitMsgs,boolean setScale,Date minD,Date maxD) {
         this.commitMsgs = commitMsgs;
+        this.setScale = setScale;
+        if(setScale){
+            minDate = minD;
+            maxDate = maxD;
+        }
         barcode = new HashMap<Date, BarInfo>();
+        allMsgReg = new BarInfo();
         commitMsgs.forEach(msg->{
             Date date = msg.getCommitTime();
             //FIXME:为了便于统计，强制把时分秒清零了...
@@ -33,16 +41,19 @@ public class BarCode {
                 barcode.put(date,new BarInfo());
                 barcode.get(date).increseTimes();
             }
+            allMsgReg.increseTimes();
             //计算最早和最晚的时间
-            if(minDate==null){
-                minDate = date;
-                maxDate = date;
-            }else{
-                if(date.after(maxDate)){
-                    maxDate=date;
-                }
-                if(date.before(minDate)){
-                    minDate=date;
+            if(!setScale){
+                if(minDate==null){
+                    minDate = date;
+                    maxDate = date;
+                }else{
+                    if(date.after(maxDate)){
+                        maxDate=date;
+                    }
+                    if(date.before(minDate)){
+                        minDate=date;
+                    }
                 }
             }
         });
@@ -146,6 +157,18 @@ public class BarCode {
 
     public List<BarNode> getBarNodeList() {
         return barNodeList;
+    }
+
+    public Date getMinDate() {
+        return minDate;
+    }
+
+    public Date getMaxDate() {
+        return maxDate;
+    }
+
+    public BarInfo getAllMsgReg() {
+        return allMsgReg;
     }
 
     @Override
