@@ -8,6 +8,7 @@ import Contri.ContributorMap;
 import FirstCommit.CommitTimesNode;
 import FirstCommit.FirstCommitNode;
 import FirstCommit.getFirstCommitTimesList;
+import LauchFunction.LauchLOC;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -23,11 +24,16 @@ public class CommitMessageTypeTest {
 
     @Test
     public void testTpye(){
-        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三上\\JAVA程序设计\\java-2018f-homework"); //获得本地项目的引用
-//        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\Git-Repository-Miner-Codes"); //获得本地项目的引用
+//        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三上\\JAVA程序设计\\java-2018f-homework"); //获得本地项目的引用
+        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\Git-Repository-Miner-Codes"); //获得本地项目的引用
 //        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\alluxio"); //获得本地项目的引用
 
 //        AllContribution(repo);
+        try {
+            LauchLOC.Lauch(repo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         GetAllAndEachContribution(repo);
 //        getFirstCommitLogs(repo);
 

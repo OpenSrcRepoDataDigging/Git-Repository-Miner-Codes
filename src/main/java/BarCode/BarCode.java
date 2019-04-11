@@ -15,6 +15,7 @@ public class BarCode {
     List<CommitMessages> commitMsgs;
     HashMap<Date,BarInfo> barcode;
     List<BarNode> barNodeList;
+    List<BarNode> barNodeWeekList;  //按照星期为粒度的List
     Date minDate;   //条形码起始日期
     Date maxDate;   //条形码终止日期
     boolean setScale; //是否设定起始和终止日期
@@ -30,6 +31,7 @@ public class BarCode {
         barcode = new HashMap<Date, BarInfo>();
         allMsgReg = new BarInfo();
         commitMsgs.forEach(msg->{
+            msg.displayMessages();
             Date date = msg.getCommitTime();
             //FIXME:为了便于统计，强制把时分秒清零了...
             date.setHours(0);
@@ -62,6 +64,40 @@ public class BarCode {
         FormatBarCode();
     }
 
+    //从已有的List中生成新的list
+    List<BarNode> getCommitListByWeek(){
+        if(barNodeWeekList != null){
+            return barNodeWeekList;
+        }
+        barNodeWeekList = new ArrayList<BarNode>();
+        return barNodeWeekList;
+    }
+
+    public static Map<String,Integer> getWeekAndYear(Date date) {
+        Map<String,Integer> result =  new HashMap<String,Integer>();
+        Calendar cal = Calendar.getInstance();
+
+        //设置一周的开始,默认是周日,这里设置成星期一
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatMon = new SimpleDateFormat("MM");
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        Date d = date;
+
+        cal.setTime(d);
+        int month = Integer.valueOf(formatMon.format(d));
+        int year = Integer.valueOf(formatYear.format(d));
+
+        int week = cal.get(Calendar.WEEK_OF_YEAR);
+        result.put("week", week);
+        if(week == 1 && month == 12){
+            result.put("year", year + 1);
+        }else{
+            result.put("year", year);
+        }
+
+        return result;
+    }
 
     //对日期格式化
     public void FormatBarCode(){
