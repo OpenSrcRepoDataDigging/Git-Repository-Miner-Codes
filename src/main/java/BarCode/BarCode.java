@@ -31,7 +31,7 @@ public class BarCode {
         barcode = new HashMap<Date, BarInfo>();
         allMsgReg = new BarInfo();
         commitMsgs.forEach(msg->{
-            msg.displayMessages();
+//            msg.displayMessages();
             Date date = msg.getCommitTime();
             //FIXME:为了便于统计，强制把时分秒清零了...
             date.setHours(0);
@@ -59,17 +59,38 @@ public class BarCode {
                 }
             }
         });
-        System.out.println("minDate:"+minDate);
-        System.out.println("maxDate:"+maxDate);
+//        System.out.println("minDate:"+minDate);
+//        System.out.println("maxDate:"+maxDate);
         FormatBarCode();
+        //FIXME: 是否要以一周为单位，2019/4/12 1：17 这里决定以天为单位然后算一晚上矩阵
+//        barNodeList = getCommitListByWeek();
+//        System.out.println(barNodeList);
     }
 
     //从已有的List中生成新的list
-    List<BarNode> getCommitListByWeek(){
+    public List<BarNode> getCommitListByWeek(){
         if(barNodeWeekList != null){
             return barNodeWeekList;
         }
         barNodeWeekList = new ArrayList<BarNode>();
+        Map<String,Integer> temp = getWeekAndYear(barNodeList.get(0).date);
+        BarNode node = new BarNode(barNodeList.get(0).date,new BarInfo(barNodeList.get(0).info.getCommitTimes()));
+        for(int i=1;i<barNodeList.size();i++){
+            if(getWeekAndYear(node.date).equals(getWeekAndYear(barNodeList.get(i).date))){
+                node.info.addTimes(barNodeList.get(i).info.getCommitTimes());
+                continue;
+            }else{
+//                System.out.println(node);
+                barNodeWeekList.add(node);
+                node = new BarNode(barNodeList.get(i).date,new BarInfo(barNodeList.get(i).info.getCommitTimes()));
+            }
+        }
+        barNodeWeekList.add(node);
+//        System.out.println(node);
+//        barNodeList.forEach(node->{
+//            System.out.println(getWeekAndYear(node.date));
+//        });
+//        System.out.println("size="+barNodeList.size()+",week size="+barNodeWeekList.size());
         return barNodeWeekList;
     }
 
@@ -117,7 +138,7 @@ public class BarCode {
             Calendar tempEnd = Calendar.getInstance();
             tempEnd.setTime(end);
             tempEnd.add(Calendar.DATE, +1);// 日期加1(包含结束)\
-            System.out.println("------------Formatting------------");
+//            System.out.println("------------Formatting------------");
             while (tempStart.before(tempEnd)) {
                 Date ins = tempStart.getTime();
                 if(barcode.containsKey(ins)){

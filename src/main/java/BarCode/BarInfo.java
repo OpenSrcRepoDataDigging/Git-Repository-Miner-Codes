@@ -13,6 +13,10 @@ public class BarInfo {
         this.commitTimes = 0;
     }
 
+    public BarInfo(int times) {
+        this.commitTimes = times;
+    }
+
     public void addTimes(int add) {
         this.commitTimes += add;
     }

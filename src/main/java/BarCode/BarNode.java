@@ -14,4 +14,11 @@ public class BarNode {
         this.info = info;
     }
 
+    @Override
+    public String toString() {
+        return "BarNode{" +
+                "date=" + date +
+                ", info=" + info +
+                '}';
+    }
 }

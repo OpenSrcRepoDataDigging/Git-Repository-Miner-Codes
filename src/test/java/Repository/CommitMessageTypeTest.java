@@ -25,15 +25,15 @@ public class CommitMessageTypeTest {
     @Test
     public void testTpye(){
 //        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三上\\JAVA程序设计\\java-2018f-homework"); //获得本地项目的引用
-        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\Git-Repository-Miner-Codes"); //获得本地项目的引用
-//        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\alluxio"); //获得本地项目的引用
+//        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\Git-Repository-Miner-Codes"); //获得本地项目的引用
+        GitRepository repo = new GitRepositoryFactory().openLocalRepositoryFrom("E:\\大三下\\创新项目\\alluxio"); //获得本地项目的引用
 
 //        AllContribution(repo);
-        try {
-            LauchLOC.Lauch(repo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            LauchLOC.Lauch(repo);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         GetAllAndEachContribution(repo);
 //        getFirstCommitLogs(repo);
 
@@ -51,15 +51,17 @@ public class CommitMessageTypeTest {
             e.printStackTrace();
         }
         BarCode bar = new BarCode(commitList,false,null,null);
+        bar.getCommitListByWeek();
 //        System.out.println(bar);
         System.out.println("------------");
 //        BarCodeDraw barCodeDraw = new BarCodeDraw(bar);
 //        barCodeDraw.drawChartPanel();
-        ArrayList<BarCode> barCodeArrayList = new ArrayList<BarCode>();
-        barCodeArrayList.add(bar);
-        barCodeArrayList.add(bar);
-        BarCodeSave saveBar = new BarCodeSave(barCodeArrayList);
-        saveBar.SaveBarCode("allBarCode.csv");
+
+//        ArrayList<BarCode> barCodeArrayList = new ArrayList<BarCode>();
+//        barCodeArrayList.add(bar);
+//        barCodeArrayList.add(bar);
+//        BarCodeSave saveBar = new BarCodeSave(barCodeArrayList);
+//        saveBar.SaveBarCode("allBarCode.csv");
     }
 
     void EachContribution(GitRepository repo){
@@ -94,14 +96,14 @@ public class CommitMessageTypeTest {
         barCodeArrayList.add(bar);
         ContributorMap contributorMap = repo.getContributorMap();
         contributorMap.getMaps().forEach((author,contributor)->{
-            System.out.println("Author:"+author);
-            contributor.getCommitList().forEach(msg->{
-                System.out.println(msg.getCommitTime());
-            });
+//            System.out.println("Author:"+author);
+//            contributor.getCommitList().forEach(msg->{
+//                System.out.println(msg.getCommitTime());
+//            });
             BarCode barTmp = new BarCode(contributor.getCommitList(),true,bar.getMinDate(),bar.getMaxDate());
-            System.out.println(barTmp);
+//            System.out.println(barTmp);
             barCodeArrayList.add(barTmp);
-            System.out.println("------------");
+//            System.out.println("------------");
         });
 
         BarCodeSave saveBar = new BarCodeSave(barCodeArrayList);
