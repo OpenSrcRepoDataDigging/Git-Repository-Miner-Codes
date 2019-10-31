@@ -1,11 +1,9 @@
-package LauchFunction;
+package LaunchFunction;
 
 import CommitKeyWord.CommitKeyWord;
-import LOC.CalculateLOC;
-import Repository.GitRepository;
 import org.eclipse.jgit.api.Git;
 
-public class LauchCommitKeyWord {
+public class LaunchCommitKeyWord {
     public static void Lauch(Git git) throws Exception{
         System.out.println("Ready to calculate Commit Key Word");
         CommitKeyWord commitKeyWord = new CommitKeyWord(git);

@@ -1,9 +1,12 @@
-package LauchFunction;
+package LaunchFunction;
 
 import Repository.GitRepository;
 import Repository.GitRepositoryFactory;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,7 +18,7 @@ import java.util.Date;
     四个属性： RepoName(str), RepoUrl(str), RepoLocalPath(str 绝对路径), CloneTime(timestamp)
 
     所有克隆的Repo集中管理，目录结构如下：
-    ~/.gitminer/{number, 0/repo0, 1/repo1, 2/repo2, 3/repo3}
+    ~/.gitminer/{number, 0/repo,csv, 1/repo,csv, 2/repo,csv, 3/repo,csv}
     使用一个文件(number)记录当前计数，每个数字是一个目录，该目录下存储着Repo。
 
     考虑过该数据库是否可以被前端记录仓库列表的数据库合并。建议不合并。
@@ -23,20 +26,75 @@ import java.util.Date;
 
 public class MainDataGenerator {
 
+    private static final Logger LOG = Logger.getLogger(MainDataGenerator.class);
+    static {
+        BasicConfigurator.configure();
+    }
+
     private Connection connection = null;
 
-    private void initDataBase() throws ClassNotFoundException, SQLException {
+    public static void main(String[] args){
+        try{
+            new MainDataGenerator().init();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void init() throws ClassNotFoundException, SQLException, IOException{
+
+        // TODO: 初始化程序目录"~/.gitminer/"
+        String pathname = "/home/"+System.getProperty("user.name")+"/.gitminer/";
+        File main_dir = new File(pathname);
+        if (!main_dir.exists()){
+            LOG.debug(".gitminer not exists, create first.");
+            if(!main_dir.mkdir()){
+                LOG.error(".gitminer dir create failed.");
+            }
+        }
+        File number_file = new File(pathname + "number");
+        if (!number_file.exists()){
+            LOG.debug("number file not exists, create first, and init its value as 0.");
+            if (!number_file.createNewFile()){
+                LOG.error("number file create failed.");
+            }
+            FileOutputStream fos = null;
+            OutputStreamWriter osw = null;
+            try{
+                fos = new FileOutputStream(number_file);
+                osw = new OutputStreamWriter(fos);
+                osw.write("0");
+            } catch (IOException e){
+                e.printStackTrace();
+            } finally {
+                if (null != osw){
+                    try{
+                        osw.close();
+                    }  catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                if (null != fos){
+                    try{
+                        fos.close();
+                    } catch(IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
 
         // TODO: 初始化数据库连接(sqlite)
-
         // load driver
         Class.forName("org.sqlite.JDBC");
-        String localdb = "Local sql db Path";  // TODO: 替换该字符串
+        String localdb = pathname + "repo.db";
         connection = DriverManager.getConnection("jdbc:sqlite:" + localdb);
+        LOG.debug("Database repostatus create/connected successfully.");
 
     }
 
-    private void closeConnection(){
+    private void closeDBConnection(){
 
         try {
             if (connection != null) {

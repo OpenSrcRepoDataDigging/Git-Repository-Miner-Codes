@@ -1,7 +1,7 @@
 # Git-Repository-Miner-Codes
 南京大学“开源仓库代码挖掘和可视化”创新项目代码
 
-## 与前段交互的主类是： LauchFunction/MainDataGenerator
+## 与前端交互的主类是： LaunchFunction/MainDataGenerator
 
 ***Remember to "git fetch origin master" and "git merge origin master" before your Modification!***
 

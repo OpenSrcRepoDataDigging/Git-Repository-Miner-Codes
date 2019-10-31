@@ -1,12 +1,12 @@
-package LauchFunction;
+package LaunchFunction;
 
 
 import LOC.CalculateLOC;
 import Repository.GitRepository;
 
 //启动计算LOC
-public class LauchLOC {
-    public LauchLOC(){
+public class LaunchLOC {
+    public LaunchLOC(){
     }
 
     public static void Lauch(GitRepository repo) throws Exception{

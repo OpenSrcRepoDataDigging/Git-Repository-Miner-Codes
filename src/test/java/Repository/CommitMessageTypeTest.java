@@ -5,19 +5,12 @@ import BarCode.BarCodeDraw;
 import BarCode.BarCodeSave;
 import Contri.CommitMessages;
 import Contri.ContributorMap;
-import FirstCommit.CommitTimesNode;
-import FirstCommit.FirstCommitNode;
 import FirstCommit.getFirstCommitTimesList;
-import LauchFunction.LauchLOC;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class CommitMessageTypeTest {
@@ -30,7 +23,7 @@ public class CommitMessageTypeTest {
 
 //        AllContribution(repo);
 //        try {
-//            LauchLOC.Lauch(repo);
+//            LaunchLOC.Lauch(repo);
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
