@@ -7,15 +7,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Date;
 
 /*
     定义一个数据库：RepoStatus
-    四个属性： RepoName(str), RepoUrl(str), RepoLocalPath(str 绝对路径), CloneTime(timestamp)
+    四个属性： RepoName(str), RepoUrl(str), RepoLocalPath(str 相对路径), CloneTime(timestamp)
 
     所有克隆的Repo集中管理，目录结构如下：
     ~/.gitminer/{number, 0/repo,csv, 1/repo,csv, 2/repo,csv, 3/repo,csv}
@@ -23,6 +20,7 @@ import java.util.Date;
 
     考虑过该数据库是否可以被前端记录仓库列表的数据库合并。建议不合并。
 
+    RepoStatus表的建立放在sql scripts中：src/sql/setup.sql。
 
  */
 
@@ -93,7 +91,6 @@ public class MainDataGenerator {
                 }
             }
         }
-
 
         // 初始化数据库连接(sqlite)
         // load driver
