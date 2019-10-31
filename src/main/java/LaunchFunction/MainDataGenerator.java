@@ -22,28 +22,38 @@ import java.util.Date;
     使用一个文件(number)记录当前计数，每个数字是一个目录，该目录下存储着Repo。
 
     考虑过该数据库是否可以被前端记录仓库列表的数据库合并。建议不合并。
+
+
  */
 
 public class MainDataGenerator {
 
+    public static void main(String[] args){
+        MainDataGenerator md = new MainDataGenerator();
+        try{
+            md.init();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        String result = md.nextRepoLocalPathString();
+
+        System.out.println(result);
+    }
+
+    // 初始化log4j
     private static final Logger LOG = Logger.getLogger(MainDataGenerator.class);
     static {
         BasicConfigurator.configure();
     }
 
+    // 与repo.db数据库的连接
     private Connection connection = null;
 
-    public static void main(String[] args){
-        try{
-            new MainDataGenerator().init();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
+    // init() 方法初始化了.gitminer目录，并初始化了与数据库的连接。
     private void init() throws ClassNotFoundException, SQLException, IOException{
 
-        // TODO: 初始化程序目录"~/.gitminer/"
+        // 初始化程序目录"~/.gitminer/"
         String pathname = "/home/"+System.getProperty("user.name")+"/.gitminer/";
         File main_dir = new File(pathname);
         if (!main_dir.exists()){
@@ -85,7 +95,7 @@ public class MainDataGenerator {
         }
 
 
-        // TODO: 初始化数据库连接(sqlite)
+        // 初始化数据库连接(sqlite)
         // load driver
         Class.forName("org.sqlite.JDBC");
         String localdb = pathname + "repo.db";
@@ -94,11 +104,13 @@ public class MainDataGenerator {
 
     }
 
+    // 断开与connection的链接
     private void closeDBConnection(){
 
         try {
             if (connection != null) {
                 connection.close();
+                connection = null;
             }
         } catch (SQLException e){
             e.printStackTrace();
@@ -106,11 +118,82 @@ public class MainDataGenerator {
 
     }
 
-    private String getLocalPathString(){
+    // 根据number文件存储的值，初始化下一仓库存储的路径，并返回该目录对应的字符串。
+    private String nextRepoLocalPathString(){
 
-        // TODO: 通过查看~/.gitminer/number中的内容，返回当前仓库即将存放路径的"绝对路径"。
+        /* 初始化一个新的仓库目录，通过查看~/.gitminer/number中的内容，返回当前仓库即将存放路径的"绝对路径"。
+            初始化：根据number中的内容建立一个新目录，并建立repo和csv两个子目录。
+            返回值为"/home/username/.gitminer/reponumber/"
+         */
 
-        return "";
+        // 读number文件
+        String rootpathname = "/home/" + System.getProperty("user.name") + "/.gitminer/";
+        File rootpathfile = new File(rootpathname);
+        File numberfile = new File(rootpathname + "number");
+        InputStream is = null;
+        Reader isr = null;
+        int number = 0;
+        try{
+            is = new FileInputStream(numberfile);
+            isr = new InputStreamReader(is);
+            number = isr.read() - '0';
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            try{
+                if (null != is){
+                    is.close();
+                }
+                if (null != isr){
+                    isr.close();
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        // 初始化新的仓库目录，建立repo/和csv/两个子目录。
+        String result_str = rootpathname + number + "/";
+        File result_path = new File(result_str);
+        if (!result_path.mkdir()){
+            LOG.error("Repo dir: " + number + " creates failed.");
+        }
+        String result_repo_str = result_str + "repo/";
+        String result_csv_str = result_str + "csv/";
+        File result_repo_path = new File(result_repo_str), result_csv_path = new File(result_csv_str);
+        if (!result_csv_path.mkdir() || !result_repo_path.mkdir()){
+            LOG.error("Repo dir: " + number + " sub dirs create failed.");
+        }
+
+        // number变量自增1，并写回到number文件中。
+        number++;
+        FileOutputStream fos = null;
+        OutputStreamWriter osw = null;
+        try{
+            fos = new FileOutputStream(numberfile);
+            osw = new OutputStreamWriter(fos);
+            osw.write(number + '0');
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            if (null != osw){
+                try{
+                    osw.close();
+                }  catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+            if (null != fos){
+                try{
+                    fos.close();
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // 返回值为"/home/username/.gitminer/reponumber/"
+        return result_str;
     }
 
     private boolean checkExistRepoStatus(String GitRemoteAddress){
@@ -140,6 +223,11 @@ public class MainDataGenerator {
         more....
      */
     public int generateNew (String GitRemoteAddress) {
+        try{
+            init();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         // 1. 检查当前url对应仓库是否曾经添加过；
         if (checkExistRepoStatus(GitRemoteAddress)){
@@ -148,16 +236,17 @@ public class MainDataGenerator {
         }
 
         // 2. 从url中解析出Repo的名称、url。并从getLocalPathString()方法中获取本地克隆目录。并获取当前时间戳。
-        String localpath = getLocalPathString();
+        String localpath = nextRepoLocalPathString();
         String reponame = parseRepoNameFromUrl(GitRemoteAddress);
         Timestamp timestamp = new Timestamp(new Date().getTime());
         insertToRepoStatus(reponame, GitRemoteAddress,localpath, timestamp);
 
         // 3. 克隆仓库
         GitRepository repo = null;
-        // TODO: Clone and init "repo"
+        // Clone and init "repo"
         try {
-            repo = GitRepositoryFactory.cloneRepositoryFromTo(GitRemoteAddress, localpath);
+            // 将仓库克隆到其目录的repo子目录下。
+            repo = GitRepositoryFactory.cloneRepositoryFromTo(GitRemoteAddress, localpath + "repo/");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -176,6 +265,8 @@ public class MainDataGenerator {
         // TODO: generate csv files. Insert Launch codes below.
 
 
+
+        closeDBConnection();
         return 0;
     }
 
