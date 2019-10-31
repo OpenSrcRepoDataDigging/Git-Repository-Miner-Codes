@@ -27,6 +27,7 @@ import java.util.Date;
 public class MainDataGenerator {
 
     public static void main(String[] args){
+
         MainDataGenerator md = new MainDataGenerator();
         try{
             md.init();
@@ -37,6 +38,7 @@ public class MainDataGenerator {
         String result = md.nextRepoLocalPathString();
 
         System.out.println(result);
+
     }
 
     // 初始化log4j
@@ -101,7 +103,7 @@ public class MainDataGenerator {
 
     }
 
-    // 断开与connection的链接
+    // 断开connection的连接
     private void closeDBConnection(){
 
         try {
@@ -200,11 +202,14 @@ public class MainDataGenerator {
         return false;
     }
 
+    // 从url链接中解析出仓库的名称
     private String parseRepoNameFromUrl(String GitRemoteAddress){
 
-        // TODO: 从url链接中解析出仓库的名称，提取 “.git”前 “/”后的字符串即可。
+        // 从url链接中解析出仓库的名称，提取 “.git”前 “/”后的字符串即可。
+        String[] strs1 = GitRemoteAddress.split("\\.git");
+        String[] strs2 = strs1[strs1.length-1].split("/");
+        return strs2[strs2.length-1];
 
-        return "";
     }
 
     private void insertToRepoStatus(String RepoName, String RepoUrl, String RepoLocalPath, Timestamp timestamp){
@@ -220,6 +225,8 @@ public class MainDataGenerator {
         more....
      */
     public int generateNew (String GitRemoteAddress) {
+
+        // 0. 初始化
         try{
             init();
         } catch (Exception e){
@@ -262,7 +269,7 @@ public class MainDataGenerator {
         // TODO: generate csv files. Insert Launch codes below.
 
 
-
+        // 5. 断开数据库连接
         closeDBConnection();
         return 0;
     }
