@@ -1,7 +1,10 @@
 package Repository;
 
 import Contri.ContributorMap;
+import LaunchFunction.MainDataGenerator;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -26,6 +29,11 @@ import java.time.ZoneOffset;
 *                   从而访问其各种Commit信息
 * */
 public class GitRepository {
+
+    private static final Logger LOG = Logger.getLogger(GitRepository.class);
+    static {
+        BasicConfigurator.configure();
+    }
 
     private Git git;
     private String localPath;
@@ -75,13 +83,13 @@ public class GitRepository {
 
         //得到clone到本地的git组织
         try {
-            System.out.println("Cloning from " + remoteURL + " to " + localPath);
+            LOG.debug("Cloning from " + remoteURL + " to " + localPath);
             git= cloneCommand.setURI(remoteURL) //设置远程URI
                     .setBranch("master") //设置clone下来的分支
                     .setDirectory(localFilePath) //设置下载存放路径
                     .setCredentialsProvider(usernamePasswordCredentialsProvider) //设置权限验证
                     .call();
-            System.out.println("Having GitRepository: " + git.getRepository().getDirectory());
+            LOG.debug("Having GitRepository: " + git.getRepository().getDirectory());
 
         } catch (GitAPIException e) {
             e.printStackTrace();
@@ -121,12 +129,13 @@ public class GitRepository {
             git.close();
 //            repo.close();
             FileUtils.deleteDirectory(localFilePath);
-            System.out.println("Repository has deleted completely");
+            LOG.debug("Repository has deleted completely");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /*
     public static void main(String[] args) throws IOException, GitAPIException {
         // 设置文件路径
         File repoDir = new File("D:\\Java_Workspace\\java-2018f-homework\\"+".git");
@@ -158,5 +167,7 @@ public class GitRepository {
 
         }
     }
+
+     */
 
 }

@@ -1,14 +1,21 @@
 package LaunchFunction;
 
 import CommitKeyWord.CommitLife;
-import org.eclipse.jgit.api.Git;
+import Repository.GitRepository;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 public class LaunchCommitLife {
-    public static void Lauch(Git git) throws Exception{
-        System.out.println("Ready to Commit Life");
-        CommitLife  commitLife= new CommitLife(git);
-        commitLife.ShowCommit("D://CommitLife.csv");
+    private static final Logger LOG = Logger.getLogger(LaunchCommitLife.class);
+    static {
+        BasicConfigurator.configure();
+    }
 
-        System.out.println("Ready to save");
+    public static void Launch(GitRepository repo, String csvpath) throws Exception{
+        LOG.debug("Ready to Commit Life");
+        CommitLife  commitLife= new CommitLife(repo.getGit());
+        commitLife.ShowCommit(csvpath + "cl.csv");
+
+        LOG.debug("Ready to save");
     }
 }

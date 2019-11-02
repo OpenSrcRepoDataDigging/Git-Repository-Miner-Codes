@@ -26,7 +26,7 @@ import java.util.Date;
 
 public class MainDataGenerator {
 
-    public static void main(String[] args){
+    /*public static void main(String[] args){
 
         MainDataGenerator md = new MainDataGenerator();
         try{
@@ -36,9 +36,34 @@ public class MainDataGenerator {
         }
 
         String result = md.nextRepoLocalPathString();
-
         System.out.println(result);
 
+        try{
+            md.checkExistRepoStatus("https://github.com/MirageLyu/Compiler.git");
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        String GitRemoteAddress = "https://github.com/MirageLyu/Compiler.git";
+        String localpath = md.nextRepoLocalPathString();
+        String reponame = md.parseRepoNameFromUrl(GitRemoteAddress);
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+        try {
+            md.insertToRepoStatus(reponame, GitRemoteAddress, localpath, timestamp);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try{
+            md.checkExistRepoStatus("https://github.com/MirageLyu/Compiler.git");
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+     */
+    public static void main(String[] args) {
+        new MainDataGenerator().generateNew("https://github.com/MirageLyu/test.git");
     }
 
     // 初始化log4j
@@ -98,7 +123,24 @@ public class MainDataGenerator {
         // load driver
         Class.forName("org.sqlite.JDBC");
         String localdb = pathname + "repo.db";
-        connection = DriverManager.getConnection("jdbc:sqlite:" + localdb);
+        if (!new File(localdb).exists()){
+            // 新建数据库文件时建表
+            connection = DriverManager.getConnection("jdbc:sqlite:" + localdb);
+            String sql = "CREATE TABLE REPOSTATUS\n" +
+                    "(REPONAME             CHAR(50)  NOT NULL,\n" +
+                    " REPOURL CHAR(200) PRIMARY KEY  NOT NULL,\n" +
+                    " REPOLOCALPATH        CHAR(20)  NOT NULL,\n" +
+                    " CLONETIME           TIMESTAMP  NOT NULL)";
+            try {
+                PreparedStatement ptmt = connection.prepareStatement(sql);
+                ptmt.execute();
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            connection = DriverManager.getConnection("jdbc:sqlite:" + localdb);
+        }
         LOG.debug("Database repostatus create/connected successfully.");
 
     }
@@ -127,7 +169,6 @@ public class MainDataGenerator {
 
         // 读number文件
         String rootpathname = "/home/" + System.getProperty("user.name") + "/.gitminer/";
-        File rootpathfile = new File(rootpathname);
         File numberfile = new File(rootpathname + "number");
         InputStream is = null;
         Reader isr = null;
@@ -195,11 +236,23 @@ public class MainDataGenerator {
         return result_str;
     }
 
-    private boolean checkExistRepoStatus(String GitRemoteAddress){
+    // 检查当前加入的仓库是否之前加入过，通过jdbc查RepoStatus表实现。
+    private boolean checkExistRepoStatus(String GitRemoteAddress) throws SQLException{
 
-        // TODO: 检查当前加入的仓库是否之前加入过，通过jdbc查RepoStatus表实现。
+        // 检查当前加入的仓库是否之前加入过，通过jdbc查RepoStatus表实现。
+        String sql = "SELECT * FROM REPOSTATUS WHERE REPOURL=?";
+        PreparedStatement ptmt = connection.prepareStatement(sql);
+        ptmt.setString(1, GitRemoteAddress);
+        ResultSet rs = ptmt.executeQuery();
 
-        return false;
+        if (rs.next()){
+            LOG.debug(GitRemoteAddress + " has been added before.");
+        }
+        else{
+            LOG.debug(GitRemoteAddress + " hasn't been added before.");
+        }
+        return rs.next();
+
     }
 
     // 从url链接中解析出仓库的名称
@@ -212,9 +265,19 @@ public class MainDataGenerator {
 
     }
 
-    private void insertToRepoStatus(String RepoName, String RepoUrl, String RepoLocalPath, Timestamp timestamp){
+    // 使用jdbc将参数中的数据加入到数据库中。
+    private void insertToRepoStatus(String RepoName, String RepoUrl, String RepoLocalPath, Timestamp timestamp) throws SQLException{
 
-        // TODO: 使用jdbc将参数中的数据加入到数据库中。
+        // 使用jdbc将参数中的数据加入到数据库中。
+        String sql = "INSERT INTO REPOSTATUS(REPONAME, REPOURL, REPOLOCALPATH, CLONETIME)" +
+                " VALUES(?,?,?,?)";
+        PreparedStatement ptmt = connection.prepareStatement(sql);
+        ptmt.setString(1, RepoName);
+        ptmt.setString(2, RepoUrl);
+        ptmt.setString(3, RepoLocalPath);
+        ptmt.setTimestamp(4, timestamp);
+
+        ptmt.execute();
 
     }
 
@@ -234,16 +297,24 @@ public class MainDataGenerator {
         }
 
         // 1. 检查当前url对应仓库是否曾经添加过；
-        if (checkExistRepoStatus(GitRemoteAddress)){
-            // This repo has been added before. Return value 1 to front-end.
-            return 1;
+        try {
+            if (checkExistRepoStatus(GitRemoteAddress)) {
+                // This repo has been added before. Return value 1 to front-end.
+                return 1;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
         }
 
         // 2. 从url中解析出Repo的名称、url。并从getLocalPathString()方法中获取本地克隆目录。并获取当前时间戳。
         String localpath = nextRepoLocalPathString();
         String reponame = parseRepoNameFromUrl(GitRemoteAddress);
         Timestamp timestamp = new Timestamp(new Date().getTime());
-        insertToRepoStatus(reponame, GitRemoteAddress,localpath, timestamp);
+        try {
+            insertToRepoStatus(reponame, GitRemoteAddress, localpath, timestamp);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
 
         // 3. 克隆仓库
         GitRepository repo = null;
@@ -264,9 +335,17 @@ public class MainDataGenerator {
             e.printStackTrace();
         }
 
-        // 4. 计算出所有csv文件
+        // 4. 计算出所有csv文件 generate csv files. Insert Launch codes below.
+        /*
+        try {
+            LaunchCommitKeyWord.Launch(repo, localpath + "csv/");
+            LaunchCommitLife.Launch(repo, localpath + "csv/");
+            LaunchLOC.Launch(repo, localpath + "csv/");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+         */
 
-        // TODO: generate csv files. Insert Launch codes below.
 
 
         // 5. 断开数据库连接

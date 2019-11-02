@@ -1,20 +1,25 @@
 package LaunchFunction;
 
 
+import Contri.SaveLOC2csv;
 import LOC.CalculateLOC;
 import Repository.GitRepository;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 //启动计算LOC
 public class LaunchLOC {
-    public LaunchLOC(){
+    private static final Logger LOG = Logger.getLogger(LaunchLOC.class);
+    static {
+        BasicConfigurator.configure();
     }
 
-    public static void Lauch(GitRepository repo) throws Exception{
-        System.out.println("Ready to calculate");
+    public static void Launch(GitRepository repo, String csvpath) throws Exception{
+        LOG.debug("Ready to calculate");
         CalculateLOC calculateLOC = new CalculateLOC(repo);
         calculateLOC.WorkOutLOC();
 
-        System.out.println("Ready to save");
-        //SaveLOC2csv.Save2csv(calculateLOC.getContributorMap(), "D:/");
+        LOG.debug("Ready to save");
+        SaveLOC2csv.Save2csv(calculateLOC.getContributorMap(), csvpath + "loc.csv");
     }
 }

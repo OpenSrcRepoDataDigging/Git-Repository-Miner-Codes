@@ -1,15 +1,21 @@
 package LaunchFunction;
 
 import CommitKeyWord.CommitKeyWord;
-import org.eclipse.jgit.api.Git;
+import Repository.GitRepository;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
-public class LaunchCommitKeyWord {
-    public static void Lauch(Git git) throws Exception{
-        System.out.println("Ready to calculate Commit Key Word");
-        CommitKeyWord commitKeyWord = new CommitKeyWord(git);
-        commitKeyWord.CalculateKeyWord("D://KeyWords.csv");
+public class LaunchCommitKeyWord{
+    private static final Logger LOG = Logger.getLogger(LaunchCommitKeyWord.class);
+    static {
+        BasicConfigurator.configure();
+    }
 
-        System.out.println("Ready to save");
-        //SaveLOC2csv.Save2csv(calculateLOC.getContributorMap(), "D:/");
+    public static void Launch(GitRepository repo, String csvpath) throws Exception{
+        LOG.debug("Ready to calculate Commit Key Word");
+        CommitKeyWord commitKeyWord = new CommitKeyWord(repo.getGit());
+        commitKeyWord.CalculateKeyWord(csvpath + "ckw.csv");
+
+        LOG.debug("Ready to save");
     }
 }
