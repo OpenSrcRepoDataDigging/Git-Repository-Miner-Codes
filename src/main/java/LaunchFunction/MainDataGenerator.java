@@ -245,13 +245,15 @@ public class MainDataGenerator {
         ptmt.setString(1, GitRemoteAddress);
         ResultSet rs = ptmt.executeQuery();
 
-        if (rs.next()){
+        boolean flag = rs.next();
+
+        if (flag){
             LOG.debug(GitRemoteAddress + " has been added before.");
         }
         else{
             LOG.debug(GitRemoteAddress + " hasn't been added before.");
         }
-        return rs.next();
+        return flag;
 
     }
 
@@ -336,7 +338,7 @@ public class MainDataGenerator {
         }
 
         // 4. 计算出所有csv文件 generate csv files. Insert Launch codes below.
-        /*
+
         try {
             LaunchCommitKeyWord.Launch(repo, localpath + "csv/");
             LaunchCommitLife.Launch(repo, localpath + "csv/");
@@ -344,7 +346,6 @@ public class MainDataGenerator {
         } catch (Exception e){
             e.printStackTrace();
         }
-         */
 
 
 
