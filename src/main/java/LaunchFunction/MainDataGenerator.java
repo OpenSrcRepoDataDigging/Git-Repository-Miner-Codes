@@ -339,18 +339,20 @@ public class MainDataGenerator {
         }
 
         // 4. 计算出所有csv文件 generate csv files. Insert Launch codes below.
-
+        // TODO: 底层代码有问题，ContributorMap未正确初始化
+        String csvpath = localpath + "csv/";
         try {
-            LaunchCommitKeyWord.Launch(repo, localpath + "csv/");
-            LaunchCommitLife.Launch(repo, localpath + "csv/");
-            LaunchLOC.Launch(repo, localpath + "csv/");
+            LaunchCommitKeyWord.Launch(repo, csvpath);
+            LaunchCommitLife.Launch(repo, csvpath);
+            LaunchLOC.Launch(repo, csvpath);
         } catch (Exception e){
             e.printStackTrace();
         }
 
+        // TODO: 5.将计算出的csv文件再读入，转换后写入数据库
+        // 传入： csv文件路径，以及数据库的连接connection
 
-
-        // 5. 断开数据库连接
+        // 6. 断开数据库连接
         closeDBConnection();
         return 0;
     }

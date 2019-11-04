@@ -51,7 +51,6 @@ public class DBTableTest {
             Connection connection = DriverManager.getConnection("jdbc:sqlite:" + pathname);
 
             dbTable.insertToSQL(connection);
-
         } catch (Exception e){
             e.printStackTrace();
         }
