@@ -1,12 +1,12 @@
 package LaunchFunction.DataConvert;
 
-import dataconvert.model.DBTable;
+import LaunchFunction.DataConvert.model.DBTable;
 
 public class ExampleConverterImpl implements Converter {
 
     // original data should also be a field of Converter.
     // This kinds of structure can be optimized by stream process.
-    DBTable target_table = new DBTable();
+    // DBTable target_table = new DBTable();
 
 
     public int readOriginalFile(String path) {

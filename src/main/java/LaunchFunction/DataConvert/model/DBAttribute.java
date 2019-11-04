@@ -2,10 +2,11 @@ package LaunchFunction.DataConvert.model;
 
 import exception.exceptions.DBAttributeNotSupportException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DBAttribute<T> {
+
+    public static final String STRING_CONTENT = "str";
+    public static final Integer LONG_CONTENT = 10;
+
     private String attr_name;
     private T attr_content;
     private Boolean not_null;

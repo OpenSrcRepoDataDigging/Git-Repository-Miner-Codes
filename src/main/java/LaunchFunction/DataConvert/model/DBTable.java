@@ -17,11 +17,19 @@ public class DBTable {
         BasicConfigurator.configure();
     }
 
+    public DBTable(String dbTableName, List<DBTuple> dbTuples, List<DBAttribute> dbAttributes){
+        this.dbTuples = dbTuples;
+        this.dbTableName = dbTableName;
+        this.dbAttributes = dbAttributes;
+    }
+
     private String dbTableName;
 
     private List<DBTuple> dbTuples = new ArrayList<DBTuple>();
 
     private List<DBAttribute> dbAttributes = new ArrayList<DBAttribute>();
+
+
 
     public void setDbAttributes(List<DBAttribute> dbAttributes) {
         this.dbAttributes = dbAttributes;
