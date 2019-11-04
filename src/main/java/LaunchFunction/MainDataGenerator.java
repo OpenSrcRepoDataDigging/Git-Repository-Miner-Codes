@@ -127,10 +127,10 @@ public class MainDataGenerator {
             // 新建数据库文件时建表
             connection = DriverManager.getConnection("jdbc:sqlite:" + localdb);
             String sql = "CREATE TABLE REPOSTATUS\n" +
-                    "(REPONAME             CHAR(50)  NOT NULL,\n" +
-                    " REPOURL CHAR(200) PRIMARY KEY  NOT NULL,\n" +
-                    " REPOLOCALPATH        CHAR(20)  NOT NULL,\n" +
-                    " CLONETIME           TIMESTAMP  NOT NULL)";
+                    "(REPONAME             VARCHAR(255)  NOT NULL,\n" +
+                    " REPOURL VARCHAR(255) PRIMARY KEY  NOT NULL,\n" +
+                    " REPOLOCALPATH        VARCHAR(255)  NOT NULL,\n" +
+                    " CLONETIME              TIMESTAMP  NOT NULL)";
             try {
                 PreparedStatement ptmt = connection.prepareStatement(sql);
                 ptmt.execute();
