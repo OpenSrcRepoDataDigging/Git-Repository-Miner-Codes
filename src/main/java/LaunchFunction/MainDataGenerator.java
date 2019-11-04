@@ -61,10 +61,11 @@ public class MainDataGenerator {
         }
 
     }
-     */
+
     public static void main(String[] args) {
         new MainDataGenerator().generateNew("https://github.com/MirageLyu/test.git");
     }
+    */
 
     // 初始化log4j
     private static final Logger LOG = Logger.getLogger(MainDataGenerator.class);
