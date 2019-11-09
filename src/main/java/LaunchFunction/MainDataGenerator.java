@@ -81,6 +81,7 @@ public class MainDataGenerator {
 
         // 初始化程序目录"~/.gitminer/"
         String pathname = "/home/"+System.getProperty("user.name")+"/.gitminer/";
+        //String pathname = "/" + System.getProperty("user.name")+"/.gitminer/";
         File main_dir = new File(pathname);
         if (!main_dir.exists()){
             LOG.debug(".gitminer not exists, create first.");
