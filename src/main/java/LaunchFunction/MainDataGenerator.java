@@ -11,7 +11,8 @@ import java.sql.*;
 import java.util.Date;
 
 /*
-    定义一个数据库：RepoStatus
+
+    定义一个数据库表：RepoStatus
     四个属性： RepoName(str), RepoUrl(str), RepoLocalPath(str 相对路径), CloneTime(timestamp)
 
     所有克隆的Repo集中管理，目录结构如下：
@@ -19,8 +20,6 @@ import java.util.Date;
     使用一个文件(number)记录当前计数，每个数字是一个目录，该目录下存储着Repo。
 
     考虑过该数据库是否可以被前端记录仓库列表的数据库合并。建议不合并。
-
-    RepoStatus表的建立放在sql scripts中：src/sql/setup.sql。
 
  */
 
@@ -66,6 +65,9 @@ public class MainDataGenerator {
         new MainDataGenerator().generateNew("https://github.com/MirageLyu/test.git");
     }
     */
+    public static void main(String[] args) {
+        new MainDataGenerator().generateNew("https://github.com/MirageLyu/test.git");
+    }
 
     // 初始化log4j
     private static final Logger LOG = Logger.getLogger(MainDataGenerator.class);
