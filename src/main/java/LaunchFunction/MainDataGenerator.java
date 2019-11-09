@@ -82,8 +82,8 @@ public class MainDataGenerator {
     private void init() throws ClassNotFoundException, SQLException, IOException{
 
         // 初始化程序目录"~/.gitminer/"
-        String pathname = "/home/"+System.getProperty("user.name")+"/.gitminer/";
-        //String pathname = "/" + System.getProperty("user.name")+"/.gitminer/";
+        //String pathname = "/home/"+System.getProperty("user.name")+"/.gitminer/";
+        String pathname = "/.gitminer/";
         File main_dir = new File(pathname);
         if (!main_dir.exists()){
             LOG.debug(".gitminer not exists, create first.");
@@ -172,7 +172,8 @@ public class MainDataGenerator {
          */
 
         // 读number文件
-        String rootpathname = "/home/" + System.getProperty("user.name") + "/.gitminer/";
+        //String rootpathname = "/home/" + System.getProperty("user.name") + "/.gitminer/";
+        String rootpathname = "/.gitminer/";
         File numberfile = new File(rootpathname + "number");
         InputStream is = null;
         Reader isr = null;

@@ -22,9 +22,9 @@ public class SaveLOC2csv {
         //获得map
         HashMap<String, Contributor> map = contributorMap.getMaps();
         //存用户数据
-        SaveLOC2csv.SaveAuthor(map, filePath + "/Author.csv");
+        //SaveLOC2csv.SaveAuthor(map, filePath + "/Author.csv");
         //存对应的LOC数据
-        SaveLOC2csv.SaveLOC(map,filePath + "/LOC.csv");
+        SaveLOC2csv.SaveLOC(map,filePath);
 
     }
 

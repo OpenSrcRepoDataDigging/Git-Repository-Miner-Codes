@@ -70,6 +70,7 @@ public class GitRepository {
         this.localFilePath = new File(localPath);
         this.remoteURL = remoteURL;
         gitClone();
+        contributorMap = new ContributorMap(git); //记录作者和记录作者贡献信息映射的Map
     }
 
     //从github上clone代码

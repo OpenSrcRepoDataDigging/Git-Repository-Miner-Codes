@@ -34,7 +34,7 @@ public class CalculateLOC {
     public CalculateLOC(GitRepository repo){
         this.git = repo.getGit();
         this.contributorMap = repo.getContributorMap();
-        System.out.println("CalculateLOC启动，得到contributorMap，Size为："+contributorMap.getMaps().size());
+        //System.out.println("CalculateLOC启动，得到contributorMap，Size为："+contributorMap.getMaps().size());
     }
 
     /**

@@ -73,7 +73,7 @@ public class CommitLifeMap {
             numCounter.append(message);
             map.put(date, numCounter);
         }
-
+        //System.out.println("In CommitLiftMap insert now the size=" + map.size());
     }
     //TODO:保存文件
     public void SaveAsFile(String filePath) throws Exception{

@@ -47,7 +47,8 @@ public class DBTableTest {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            String pathname = "/home/"+System.getProperty("user.name")+"/test.db";
+            //String pathname = "/home/"+System.getProperty("user.name")+"/test.db";
+            String pathname = "/test.db";
             Connection connection = DriverManager.getConnection("jdbc:sqlite:" + pathname);
 
             dbTable.insertToSQL(connection);
