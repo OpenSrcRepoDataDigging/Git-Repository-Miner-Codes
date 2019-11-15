@@ -38,7 +38,9 @@ public class MatrixSaveDelegate implements Save {
         return fileContributors;
     }
 
-    public void save(){
+    public void save(String csvpath){
+        filepath = csvpath;
+
         //TODO: Save the FileContributorMatrix to file in proper format.
         System.out.println("--- MirageLyu: Start to save Contributor-File-LOC Matrix ---");
 

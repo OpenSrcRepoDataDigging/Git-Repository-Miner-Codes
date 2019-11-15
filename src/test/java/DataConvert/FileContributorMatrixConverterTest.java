@@ -12,11 +12,11 @@ public class FileContributorMatrixConverterTest {
     public void ConverterTest(){
         try {
             Class.forName("org.sqlite.JDBC");
-            //String pathname = "/home/"+System.getProperty("user.name")+"/test.db";
-            String pathname = "/test.db";
+            String pathname = "/home/"+System.getProperty("user.name")+"/test.db";
+            //String pathname = "/test.db";
             Connection connection = DriverManager.getConnection("jdbc:sqlite:" + pathname);
 
-            String csvpath = "testcsvfile/sample.csv";
+            String csvpath = "/home/miragelyu/.gitminer/0/csv/fcm.csv";
 
             new FileContributorMatrixConverter().convert(csvpath, connection);
 

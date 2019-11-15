@@ -21,5 +21,7 @@ public class LaunchLOC {
 
         LOG.debug("Ready to save");
         SaveLOC2csv.Save2csv(calculateLOC.getContributorMap(), csvpath + "loc.csv");
+
+        calculateLOC.getContributorMap().getMatrixSaveDelegate().save(csvpath + "fcm.csv");
     }
 }

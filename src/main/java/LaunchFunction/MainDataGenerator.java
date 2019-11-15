@@ -1,5 +1,6 @@
 package LaunchFunction;
 
+import LaunchFunction.DataConvert.FileContributorMatrixConverter;
 import Repository.GitRepository;
 import Repository.GitRepositoryFactory;
 import org.apache.log4j.BasicConfigurator;
@@ -66,7 +67,7 @@ public class MainDataGenerator {
     }
     */
     public static void main(String[] args) {
-        new MainDataGenerator().generateNew("https://github.com/MirageLyu/test.git");
+        new MainDataGenerator().generateNew("https://github.com/njubigdata04/Email-Classification.git");
     }
 
     // 初始化log4j
@@ -82,8 +83,8 @@ public class MainDataGenerator {
     private void init() throws ClassNotFoundException, SQLException, IOException{
 
         // 初始化程序目录"~/.gitminer/"
-        //String pathname = "/home/"+System.getProperty("user.name")+"/.gitminer/";
-        String pathname = "/.gitminer/";
+        String pathname = "/home/"+System.getProperty("user.name")+"/.gitminer/";
+        //String pathname = "/.gitminer/";
         File main_dir = new File(pathname);
         if (!main_dir.exists()){
             LOG.debug(".gitminer not exists, create first.");
@@ -172,8 +173,8 @@ public class MainDataGenerator {
          */
 
         // 读number文件
-        //String rootpathname = "/home/" + System.getProperty("user.name") + "/.gitminer/";
-        String rootpathname = "/.gitminer/";
+        String rootpathname = "/home/" + System.getProperty("user.name") + "/.gitminer/";
+        //String rootpathname = "/.gitminer/";
         File numberfile = new File(rootpathname + "number");
         InputStream is = null;
         Reader isr = null;
@@ -343,7 +344,6 @@ public class MainDataGenerator {
         }
 
         // 4. 计算出所有csv文件 generate csv files. Insert Launch codes below.
-        // TODO: 底层代码有问题，ContributorMap未正确初始化
         String csvpath = localpath + "csv/";
         try {
             LaunchCommitKeyWord.Launch(repo, csvpath);
@@ -355,6 +355,11 @@ public class MainDataGenerator {
 
         // TODO: 5.将计算出的csv文件再读入，转换后写入数据库
         // 传入： csv文件路径，以及数据库的连接connection
+        try{
+            new FileContributorMatrixConverter().convert(csvpath + "fcm.csv", connection);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         // 6. 断开数据库连接
         closeDBConnection();

@@ -6,5 +6,5 @@ package IOutils;
  */
 
 public interface Save {
-    void save();
+    void save(String csvpath);
 }

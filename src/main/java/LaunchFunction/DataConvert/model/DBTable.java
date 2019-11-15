@@ -66,7 +66,7 @@ public class DBTable {
         StringBuilder sql = new StringBuilder("CREATE TABLE " + dbTableName + "\n(");
         for (int i = 0; i<dbAttributes.size(); i++){
             DBAttribute dba = dbAttributes.get(i);
-            sql.append(dba.getAttr_name()).append(" ").append(dba.getSQLTypeString()).append(" ").append(dba.getSQLNotNullString());
+            sql.append("'").append(dba.getAttr_name()).append("'").append(" ").append(dba.getSQLTypeString()).append(" ").append(dba.getSQLNotNullString());
             if (i == dbAttributes.size()-1){
                 sql.append(")");
             }
@@ -90,7 +90,7 @@ public class DBTable {
         StringBuilder sql = new StringBuilder("INSERT INTO " + dbTableName + "\n(");
         for (int i = 0; i<dbAttributes.size(); i++){
             DBAttribute dba = dbAttributes.get(i);
-            sql.append(dba.getAttr_name());
+            sql.append("'").append(dba.getAttr_name()).append("'");
             if (i == dbAttributes.size()-1){
                 sql.append(") ");
             }

@@ -36,7 +36,7 @@ public class ContributorMap implements FileContributorMatrix{
         initMaps(git);
         /* Initialize properties of the Save Delegate: 1.Contributor List; 2.Save FilePath */
         matrixSaveDelegate.setFileContributors(fileContributors);
-        matrixSaveDelegate.setFilepath("D:\\1.csv");
+        //matrixSaveDelegate.setFilepath("D:\\1.csv");
         matrixSaveDelegate.setFilelist(fileList);
     }
 
