@@ -67,7 +67,8 @@ public class MainDataGenerator {
     }
     */
     public static void main(String[] args) {
-        new MainDataGenerator().generateNew("https://github.com/njubigdata04/Email-Classification.git");
+        //new MainDataGenerator().generateNew("https://github.com/njubigdata04/Email-Classification.git");
+        new MainDataGenerator().updateRepo("https://github.com/njubigdata04/Email-Classification.git");
     }
 
     // 初始化log4j
@@ -139,12 +140,14 @@ public class MainDataGenerator {
             try {
                 PreparedStatement ptmt = connection.prepareStatement(sql);
                 ptmt.execute();
+                ptmt.close();
             } catch (SQLException e){
                 e.printStackTrace();
             }
         }
         else {
             connection = DriverManager.getConnection("jdbc:sqlite:" + localdb);
+            
         }
         LOG.debug("Database repostatus create/connected successfully.");
 
@@ -259,6 +262,8 @@ public class MainDataGenerator {
         else{
             LOG.debug(GitRemoteAddress + " hasn't been added before.");
         }
+
+        ptmt.close();
         return flag;
 
     }
@@ -286,6 +291,38 @@ public class MainDataGenerator {
         ptmt.setTimestamp(4, timestamp);
 
         ptmt.execute();
+
+        ptmt.close();
+
+    }
+
+    private void updateTimeStamp(String RepoUrl, Timestamp timestamp) throws SQLException{
+
+        String sql = "UPDATE REPOSTATUS SET CLONETIME=? WHERE REPOURL=?";
+
+        PreparedStatement ptmt = connection.prepareStatement(sql);
+        ptmt.setTimestamp(1, timestamp);
+        ptmt.setString(2, RepoUrl);
+
+        ptmt.executeUpdate();
+
+        ptmt.close();
+
+    }
+
+    private String queryRepoLocalPathbyRepoUrl(String RepoUrl) throws SQLException {
+
+        String sql = "SELECT * FROM REPOSTATUS WHERE REPOURL=?";
+
+        PreparedStatement ptmt = connection.prepareStatement(sql);
+
+        ptmt.setString(1, RepoUrl);
+
+        ResultSet rs = ptmt.executeQuery();
+
+        rs.next();
+
+        return rs.getString("REPOLOCALPATH");
 
     }
 
@@ -356,7 +393,9 @@ public class MainDataGenerator {
         // TODO: 5.将计算出的csv文件再读入，转换后写入数据库
         // 传入： csv文件路径，以及数据库的连接connection
         try{
-            new FileContributorMatrixConverter().convert(csvpath + "fcm.csv", connection);
+            new FileContributorMatrixConverter().convert(
+                    csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+            // TODO: convert here
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -365,5 +404,86 @@ public class MainDataGenerator {
         closeDBConnection();
         return 0;
     }
+
+    public int updateRepo (String GitRemoteAddress){
+        // 0. 初始化
+        try{
+            init();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // 1. 检查当前url对应仓库是否曾经添加过；没添加过则return 1；
+        try {
+            if (!checkExistRepoStatus(GitRemoteAddress)) {
+                // This repo has been added before. Return value 1 to front-end.
+                return 1;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        // 2. 从url中解析出Repo的名称、url。并从getLocalPathString()方法中获取本地克隆目录。并获取当前时间戳。
+        String localpath = "";
+        try {
+            localpath = queryRepoLocalPathbyRepoUrl(GitRemoteAddress);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        //String reponame = parseRepoNameFromUrl(GitRemoteAddress);
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+        try {
+            updateTimeStamp(GitRemoteAddress, timestamp);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        // 3. 克隆仓库
+        GitRepository repo = null;
+        // Clone and init "repo"
+        try {
+            // 将仓库克隆到其目录的repo子目录下。
+            //repo = GitRepositoryFactory.cloneRepositoryFromTo(GitRemoteAddress, localpath + "repo/");
+            repo = GitRepositoryFactory.openLocalRepositoryFrom(localpath + "repo/");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            assert repo != null;
+            Git git = repo.getGit();
+            if (git == null) {
+                throw new NullPointerException();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 4. 计算出所有csv文件 generate csv files. Insert Launch codes below.
+        String csvpath = localpath + "csv/";
+        try {
+            LaunchCommitKeyWord.Launch(repo, csvpath);
+            LaunchCommitLife.Launch(repo, csvpath);
+            LaunchLOC.Launch(repo, csvpath);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // TODO: 5.将计算出的csv文件再读入，转换后写入数据库
+        // 传入： csv文件路径，以及数据库的连接connection
+        try{
+            new FileContributorMatrixConverter().convert(
+                    csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], true);
+            // TODO: convert here
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // 6. 断开数据库连接
+        closeDBConnection();
+        return 0;
+
+    }
+
+
 
 }

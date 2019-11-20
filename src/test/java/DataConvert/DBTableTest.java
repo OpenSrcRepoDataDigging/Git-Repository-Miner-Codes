@@ -51,11 +51,17 @@ public class DBTableTest {
             String pathname = "/test.db";
             Connection connection = DriverManager.getConnection("jdbc:sqlite:" + pathname);
 
-            dbTable.insertToSQL(connection);
+            dbTable.insertToSQL(connection, false);
         } catch (Exception e){
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void TestSplit(){
+        String str = "localpath/0/";
+        System.out.println(str.split("/")[str.split("/").length-1]);
     }
 
 }

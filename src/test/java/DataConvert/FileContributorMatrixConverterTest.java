@@ -18,7 +18,7 @@ public class FileContributorMatrixConverterTest {
 
             String csvpath = "/home/miragelyu/.gitminer/0/csv/fcm.csv";
 
-            new FileContributorMatrixConverter().convert(csvpath, connection);
+            new FileContributorMatrixConverter().convert(csvpath, connection, "0", true);
 
         } catch (Exception e){
             e.printStackTrace();

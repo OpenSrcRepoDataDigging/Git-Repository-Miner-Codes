@@ -18,7 +18,7 @@ public class FileContributorMatrixConverter implements Converter {
     // DBTable target_table = new DBTable();
 
     @Override
-    public void convert(String csvfilepath, Connection connection) throws Exception {
+    public void convert(String csvfilepath, Connection connection, String repoID, boolean Update) throws Exception {
         CsvReader reader = new CsvReader(csvfilepath, ',', Charset.forName("UTF-8"));
         reader.readHeaders();
         String[] header = reader.getHeaders();
@@ -43,11 +43,11 @@ public class FileContributorMatrixConverter implements Converter {
         }
 
         // prepare dbTable Name
-        String dbTableName = "FileContributorMatrix";
+        String dbTableName = "FileContributorMatrix" + repoID;
 
         DBTable dbTable = new DBTable(dbTableName, dbTuples, dbAttributes);
 
-        dbTable.insertToSQL(connection);
+        dbTable.insertToSQL(connection, Update);
     }
 
 }

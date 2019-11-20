@@ -63,7 +63,7 @@ public class DBTable {
 
     private void createTable(Connection conn) throws Exception{
 
-        StringBuilder sql = new StringBuilder("CREATE TABLE " + dbTableName + "\n(");
+        StringBuilder sql = new StringBuilder("CREATE TABLE '" + dbTableName + "'\n(");
         for (int i = 0; i<dbAttributes.size(); i++){
             DBAttribute dba = dbAttributes.get(i);
             sql.append("'").append(dba.getAttr_name()).append("'").append(" ").append(dba.getSQLTypeString()).append(" ").append(dba.getSQLNotNullString());
@@ -80,6 +80,7 @@ public class DBTable {
         try {
             PreparedStatement ptmt = conn.prepareStatement(sql.toString());
             ptmt.execute();
+            ptmt.close();
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -120,10 +121,24 @@ public class DBTable {
         ptmt.close();
     }
 
-    public void insertToSQL(Connection conn){
+    private void deleteTable(Connection conn) throws Exception {
+        String sql = "DELETE FROM " + dbTableName;
+        PreparedStatement ptmt = conn.prepareStatement(sql);
+        ptmt.execute();
+        ptmt.close();
+    }
+
+    public void insertToSQL(Connection conn, boolean Update){
+
         try {
-            createTable(conn);
-            insertTuples(conn);
+            if (Update){
+                deleteTable(conn);
+                insertTuples(conn);
+            }
+            else {
+                createTable(conn);
+                insertTuples(conn);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
