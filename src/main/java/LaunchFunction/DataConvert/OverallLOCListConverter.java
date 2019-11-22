@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassifiedCommitListConverter implements Converter{
+public class OverallLOCListConverter implements Converter {
 
     @Override
     public void convert(String csvfilepath, Connection connection, String repoID, boolean Update) throws Exception {
@@ -39,7 +39,7 @@ public class ClassifiedCommitListConverter implements Converter{
         }
 
         //prepare dbTable Name
-        String dbTableName = "ClassifiedCommitList" + repoID;
+        String dbTableName = "OverallLOCList" + repoID;
         DBTable dbTable = new DBTable(dbTableName, dbTuples, dbAttributes);
 
         dbTable.insertToSQL(connection, Update);
