@@ -66,10 +66,6 @@ public class MainDataGenerator {
         new MainDataGenerator().generateNew("https://github.com/MirageLyu/test.git");
     }
     */
-    public static void main(String[] args) {
-        //new MainDataGenerator().generateNew("https://github.com/njubigdata04/Email-Classification.git");
-        new MainDataGenerator().updateRepo("https://github.com/njubigdata04/Email-Classification.git");
-    }
 
     // 初始化log4j
     private static final Logger LOG = Logger.getLogger(MainDataGenerator.class);
@@ -332,7 +328,7 @@ public class MainDataGenerator {
         1： 该仓库之前添加过。不予计算。
         more....
      */
-    public int generateNew (String GitRemoteAddress) {
+    public int ss_generateNew (String GitRemoteAddress) {
 
         // 0. 初始化
         try{
@@ -405,7 +401,7 @@ public class MainDataGenerator {
         return 0;
     }
 
-    public int updateRepo (String GitRemoteAddress){
+    public int ss_updateRepo (String GitRemoteAddress){
         // 0. 初始化
         try{
             init();
@@ -484,6 +480,12 @@ public class MainDataGenerator {
 
     }
 
+    public static int generateNew(String url){
+        return new MainDataGenerator().ss_generateNew(url);
+    }
 
+    public static int updateRepo(String url){
+        return new MainDataGenerator().ss_updateRepo(url);
+    }
 
 }
