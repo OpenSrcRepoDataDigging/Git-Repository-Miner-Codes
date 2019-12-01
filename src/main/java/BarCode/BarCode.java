@@ -1,6 +1,8 @@
 package BarCode;
 
 import Contri.CommitMessages;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -235,4 +237,6 @@ public class BarCode {
                 + barcode +
                 '}';
     }
+
+
 }
