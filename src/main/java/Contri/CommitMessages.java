@@ -26,7 +26,7 @@ public class CommitMessages {
         this.LOC_Add = 0;
         this.LOC_Delete = 0;
     }
-
+    public RevCommit GetCommit(){return commit;}
     public void setLOC_Add(int LOC_Add) {
         this.LOC_Add = LOC_Add;
     }

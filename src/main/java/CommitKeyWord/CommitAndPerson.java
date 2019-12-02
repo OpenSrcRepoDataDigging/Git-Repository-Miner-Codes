@@ -1,30 +1,22 @@
 package CommitKeyWord;
 
-import BarCode.BarCode;
-import BarCode.BarInfo;
-import BarCode.BarNode;
 import Contri.CommitMessages;
-import Repository.GitRepository;
-import Repository.GitRepositoryFactory;
 import com.csvreader.CsvWriter;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-public class CommitPersonDay {
+public class CommitAndPerson {
     private Git git;
     private List<CommitMessages> commitMsgs;
-    private Map<String, Map<Date, Integer>> person;
+    private Map<String, CommitLifeMap> person;
     private List<String> personName;
     public int threhold = 100;//限制高于100的人数才能进入名单personName
     Date minDate;   //起始日期
     Date maxDate;   //终止日期
-    public CommitPersonDay(Git input_git, int theh){
+    public CommitAndPerson(Git input_git, int theh){
         git = input_git;
         threhold = theh;
         BuildCommitListAndPerson();
@@ -45,7 +37,7 @@ public class CommitPersonDay {
             commitList.add(commit);
         }
         commitMsgs = new ArrayList<CommitMessages>();
-        person = new HashMap<String, Map<Date, Integer>>();
+        person = new HashMap<String, CommitLifeMap>();
         personName = new ArrayList<>();
         for(int i = 0; i < commitList.size() - 1; i++) {
             RevCommit commit = commitList.get(i);
@@ -69,31 +61,18 @@ public class CommitPersonDay {
             }
             String id = msg.getAuthorName();
             if (person.containsKey(id)) {
-                Map<Date, Integer> mp = person.get(id);
-                if(mp.containsKey(msg.getCommitTime())){
-                    Integer tmpi = mp.get(msg.getCommitTime());
-                    tmpi = tmpi + 1;
-                    mp.put(msg.getCommitTime(), tmpi);
-                }
-                else
-                {
-                    mp.put(msg.getCommitTime(), new Integer(1));
-                }
+                CommitLifeMap mp = person.get(id);
+                mp.insert(msg.getCommitTime(), msg.GetCommit().getShortMessage());
                 person.put(id, mp);
             } else {
-                Map<Date, Integer> mp = new HashMap<>();
-                mp.put(msg.getCommitTime(), new Integer(1));
-                person.put(id, mp);
+                CommitLifeMap cmp = new CommitLifeMap();
+                cmp.insert(msg.getCommitTime(), msg.GetCommit().getShortMessage());
+                person.put(id, cmp);
             }
 
         }
         for(String entry : person.keySet()){
-            Map<Date, Integer> loop = person.get(entry);
-            int count = 0;
-            for(Integer value:loop.values())
-                count += value;
-            if(count > threhold)
-                personName.add(entry);
+            personName.add(entry);
         }
         System.out.println("total commit size:" + commitList.size());
     }
@@ -130,104 +109,18 @@ public class CommitPersonDay {
             csvWriter.write(entry.getValue().toString());
             Date dt = entry.getKey();
             for(String name:personName){
-                Map<Date, Integer> oneperson = person.get(name);
-                if(oneperson.containsKey(dt))
-                {
-                    csvWriter.write(oneperson.get(dt).toString());
-                }
-                else
-                    csvWriter.write("0");
+                CommitLifeMap oneperson = person.get(name);
+                int add = oneperson.GetKindByDate(dt, 1);
+                int del = oneperson.GetKindByDate(dt, 2);
+                int mod = oneperson.GetKindByDate(dt, 3);
+                int fix = oneperson.GetKindByDate(dt, 4);
+                csvWriter.write(String.valueOf(add) + "-" + String.valueOf(del) + "-" +String.valueOf(mod) + "-" +String.valueOf(fix));
             }
             csvWriter.endRecord();
         }
         csvWriter.close();
     }
-    //按周输出每个人每天的
-    public void SaveByWeek(String filePath) throws Exception{
-        CsvWriter csvWriter = new CsvWriter(filePath, ',', Charset.forName("UTF-8"));
-        // 写表头
-        String[] header = new String[personName.size() + 2];
-        header[0] = "Date";
-        header[1] = "All";
-        for(int i = 2; i < personName.size() + 2; i++){
-            header[i] = personName.get(i-2);
-        }
-        csvWriter.writeRecord(header);
-        Date first = getThisWeekMonday(minDate);
-        Map<Date, Integer> mp = new HashMap<>();
-        for(int i = 0;i < commitMsgs.size(); i++){
-            CommitMessages commit = commitMsgs.get(i);
-            Date dt = getThisWeekMonday(commit.getCommitTime());
-            if(mp.containsKey(dt)){
-                Integer it = mp.get(dt) + 1;
-                mp.put(dt, it);
-            }
-            else{
-                mp.put(dt, new Integer(1));
-            }
-        }
-        mp = sortMapByKey(mp);
-        for(Map.Entry<Date, Integer> entry: mp.entrySet()){
-            Date key = entry.getKey();
-            String time = Integer.toString(key.getYear() + 1900) + "/" + Integer.toString(key.getMonth() + 1)+ "/" + Integer.toString(key.getDate());
-            System.out.println("date: "+key);
-            csvWriter.write(time);
-            //csvWriter.write(entry.getKey().toString());
-            csvWriter.write(entry.getValue().toString());
-            Date dt = entry.getKey();
-            for(String name:personName){
-                Map<Date, Integer> oneperson = person.get(name);
-                Integer count = new Integer(0);
-                for(Map.Entry<Date, Integer> entry1:oneperson.entrySet()){
-                    if(CompareInSameWeek(entry1.getKey(), dt)){
-                        count += entry1.getValue();
-                    }
-                }
-                csvWriter.write(count.toString());
-            }
-            csvWriter.endRecord();
-        }
-        csvWriter.close();
-    }
-    public static Date getThisWeekMonday(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        // 获得当前日期是一个星期的第几天
-        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
-        if (Calendar.SUNDAY == dayWeek) {//如果是周日，那么要向上取
-            cal.add(Calendar.DAY_OF_MONTH, -1);
-        }
-        // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
-        cal.setFirstDayOfWeek(Calendar.MONDAY);
-        // 获得当前日期是一个星期的第几天
-        int day = cal.get(Calendar.DAY_OF_WEEK);
-        // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
-        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
-        return cal.getTime();
-    }
 
-    public boolean CompareInSameWeek(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        //设置一周的开始,默认是周日,这里设置成星期一
-        cal1.setFirstDayOfWeek(Calendar.MONDAY);
-        cal2.setFirstDayOfWeek(Calendar.MONDAY);
-
-        cal1.setTime(date1);
-        cal2.setTime(date2);
-
-        int subyear = cal1.get(Calendar.YEAR) - cal2.get(Calendar.YEAR);
-        if(subyear == 0) {
-            return cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
-        }
-        else if(subyear == 1 && cal2.get(Calendar.MONTH) == 11){
-            return cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
-        }
-        else if(subyear == -1 && cal1.get(Calendar.MONTH) == 11){
-            return cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
-        }
-        return false;
-    }
     //Test
     /*public static void main(String args[]) {
         String GitAddress = "https://github.com/Microsoft/microsoft.github.io.git";

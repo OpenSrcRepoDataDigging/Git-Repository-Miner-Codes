@@ -60,6 +60,19 @@ public class CommitLifeMap {
         map = new TreeMap<Date, NumCounter>();
         map.clear();
     }
+    //kind表示获取的种类类别，add = 1， del = 2， mod = 3, fix =4
+    public int GetKindByDate(Date d, int kind){
+        if(map.containsKey(d)){
+            switch (kind){
+                case 1:return map.get(d).add;
+                case 2:return map.get(d).del;
+                case 3:return map.get(d).mod;
+                case 4:return map.get(d).fix;
+                default:return 0;
+            }
+        }
+        return 0;
+    }
     //TODO:插入数值
     public void insert(Date date, String message){
         date.setSeconds(0);
