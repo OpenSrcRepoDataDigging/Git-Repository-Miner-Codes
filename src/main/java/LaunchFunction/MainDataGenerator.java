@@ -1,6 +1,9 @@
 package LaunchFunction;
 
+import LaunchFunction.DataConvert.CommitTimesListByDayConverter;
+import LaunchFunction.DataConvert.ContributorNetworkConverter;
 import LaunchFunction.DataConvert.FileContributorMatrixConverter;
+import LaunchFunction.DataConvert.LOCSum_LastCommitConverter;
 import Repository.GitRepository;
 import Repository.GitRepositoryFactory;
 import org.apache.log4j.BasicConfigurator;
@@ -60,12 +63,12 @@ public class MainDataGenerator {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     public static void main(String[] args) {
-        new MainDataGenerator().generateNew("https://github.com/MirageLyu/test.git");
+        new MainDataGenerator().ss_generateNew("https://github.com/njubigdata04/InvertedIndexWithHbase.git");
     }
-    */
+
 
     // 初始化log4j
     private static final Logger LOG = Logger.getLogger(MainDataGenerator.class);
@@ -379,9 +382,10 @@ public class MainDataGenerator {
         // 4. 计算出所有csv文件 generate csv files. Insert Launch codes below.
         String csvpath = localpath + "csv/";
         try {
-            LaunchCommitKeyWord.Launch(repo, csvpath);
-            LaunchCommitLife.Launch(repo, csvpath);
             LaunchLOC.Launch(repo, csvpath);
+            LaunchCommitAndPerson.Launch(repo, csvpath);
+            LaunchCommitEachDayWeek.Launch(repo, csvpath);
+            LaunchLOCAndLastestCommit.Launch(repo, csvpath);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -391,6 +395,13 @@ public class MainDataGenerator {
         try{
             new FileContributorMatrixConverter().convert(
                     csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+            new ContributorNetworkConverter().convert(
+                    csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+            new CommitTimesListByDayConverter().convert(
+                    csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+            new LOCSum_LastCommitConverter().convert(
+                    csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+
             // TODO: convert here
         } catch (Exception e){
             e.printStackTrace();

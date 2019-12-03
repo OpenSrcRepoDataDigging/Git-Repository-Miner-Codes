@@ -13,7 +13,7 @@ public class LOCAndLastestCommit {
     private CalculateLOC calculateLOC;
     private Map<String, Date> person;
     public LOCAndLastestCommit(GitRepository repo){
-        CalculateLOC calculateLOC = new CalculateLOC(repo);
+        calculateLOC = new CalculateLOC(repo);
         try{
             calculateLOC.WorkOutLOC();
         }catch (Exception e){
@@ -55,7 +55,7 @@ public class LOCAndLastestCommit {
         CsvWriter csvWriter = new CsvWriter(filePath, ',', Charset.forName("UTF-8"));
         //CsvWriter csvWriter = new CsvWriter(filePath);
         // 写表头
-        String[] headers = {"AuthorName","LOC_Add","LOC_Del", "LastestCommit"};
+        String[] headers = {"AuthorName","LOC_Add","LOC_Del"};
         csvWriter.writeRecord(headers);
         //遍历记录
         for (Map.Entry<String, Contributor> entry : contributorMap.getMaps().entrySet()) {
@@ -63,9 +63,10 @@ public class LOCAndLastestCommit {
             Contributor contributor = entry.getValue();
             csvWriter.write(String.valueOf(contributor.getLOC_Add_All()));
             csvWriter.write(String.valueOf(contributor.getLOC_Delete_All()));
-            Date key = person.get(entry.getKey());
-            String time = Integer.toString(key.getYear() + 1900) + "/" + Integer.toString(key.getMonth() + 1)+ "/" + Integer.toString(key.getDate());
-            csvWriter.write(time);
+            //Date key = person.get(entry.getKey());
+            //System.out.println("===================" + entry.getKey()+"============================================");
+            //String time = (key.getYear() + 1900) + "/" + (key.getMonth() + 1) + "/" + key.getDate();
+            //csvWriter.write(time);
             csvWriter.endRecord();
         }
 
