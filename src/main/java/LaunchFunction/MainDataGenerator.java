@@ -1,9 +1,6 @@
 package LaunchFunction;
 
-import LaunchFunction.DataConvert.CommitTimesListByDayConverter;
-import LaunchFunction.DataConvert.ContributorNetworkConverter;
-import LaunchFunction.DataConvert.FileContributorMatrixConverter;
-import LaunchFunction.DataConvert.LOCSum_LastCommitConverter;
+import LaunchFunction.DataConvert.*;
 import Repository.GitRepository;
 import Repository.GitRepositoryFactory;
 import org.apache.log4j.BasicConfigurator;
@@ -135,7 +132,8 @@ public class MainDataGenerator {
                     "(REPONAME             VARCHAR(255)  NOT NULL,\n" +
                     " REPOURL VARCHAR(255) PRIMARY KEY  NOT NULL,\n" +
                     " REPOLOCALPATH        VARCHAR(255)  NOT NULL,\n" +
-                    " CLONETIME              TIMESTAMP  NOT NULL)";
+                    " CLONETIME              TIMESTAMP  NOT NULL,\n" +
+                    " CLONESTATUS          INTEGER      NOT NULL)";
             try {
                 PreparedStatement ptmt = connection.prepareStatement(sql);
                 ptmt.execute();
@@ -146,7 +144,7 @@ public class MainDataGenerator {
         }
         else {
             connection = DriverManager.getConnection("jdbc:sqlite:" + localdb);
-            
+
         }
         LOG.debug("Database repostatus create/connected successfully.");
 
@@ -281,16 +279,29 @@ public class MainDataGenerator {
     private void insertToRepoStatus(String RepoName, String RepoUrl, String RepoLocalPath, Timestamp timestamp) throws SQLException{
 
         // 使用jdbc将参数中的数据加入到数据库中。
-        String sql = "INSERT INTO REPOSTATUS(REPONAME, REPOURL, REPOLOCALPATH, CLONETIME)" +
-                " VALUES(?,?,?,?)";
+        String sql = "INSERT INTO REPOSTATUS(REPONAME, REPOURL, REPOLOCALPATH, CLONETIME, CLONESTATUS)" +
+                " VALUES(?,?,?,?,?)";
         PreparedStatement ptmt = connection.prepareStatement(sql);
         ptmt.setString(1, RepoName);
         ptmt.setString(2, RepoUrl);
         ptmt.setString(3, RepoLocalPath);
         ptmt.setTimestamp(4, timestamp);
+        ptmt.setLong(5, 1);
 
         ptmt.execute();
 
+        ptmt.close();
+
+    }
+
+    private void updateCloneStatusAsFinish(String RepoURL) throws SQLException{
+
+        // 使用jdbc将参数中的数据加入到数据库中。
+        String sql = "UPDATE REPOSTATUS SET CLONESTATUS=? WHERE REPOURL=?";
+        PreparedStatement ptmt = connection.prepareStatement(sql);
+        ptmt.setLong(1, 0);
+        ptmt.setString(2, RepoURL);
+        ptmt.execute();
         ptmt.close();
 
     }
@@ -366,6 +377,7 @@ public class MainDataGenerator {
         try {
             // 将仓库克隆到其目录的repo子目录下。
             repo = GitRepositoryFactory.cloneRepositoryFromTo(GitRemoteAddress, localpath + "repo/");
+            updateCloneStatusAsFinish(GitRemoteAddress);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -401,6 +413,8 @@ public class MainDataGenerator {
                     csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
             new LOCSum_LastCommitConverter().convert(
                     csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+            new ClassifiedCommitListConverter().convert(
+                    csvpath + "CommitKindPerPerson.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
 
             // TODO: convert here
         } catch (Exception e){

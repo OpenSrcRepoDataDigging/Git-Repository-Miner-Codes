@@ -23,7 +23,7 @@ public class ClassifiedCommitListConverter implements Converter{
         List<DBAttribute> dbAttributes = new ArrayList<>();
         dbAttributes.add(new DBAttribute<>(header[0], DBAttribute.STRING_CONTENT, true));
         for (int i=1; i<header.length; i++){
-            dbAttributes.add(new DBAttribute<>(header[i], DBAttribute.LONG_CONTENT, true));
+            dbAttributes.add(new DBAttribute<>(header[i], DBAttribute.STRING_CONTENT, true));
         }
 
         //prepare dbTuples
@@ -33,7 +33,7 @@ public class ClassifiedCommitListConverter implements Converter{
             DBTuple dbt = new DBTuple(raw_tuple.length);
             dbt.add(new DBValue<>(raw_tuple[0]));
             for (int i=1; i<raw_tuple.length; i++){
-                dbt.add(new DBValue<>(Integer.parseInt(raw_tuple[i])));
+                dbt.add(new DBValue<>(raw_tuple[i]));
             }
             dbTuples.add(dbt);
         }
