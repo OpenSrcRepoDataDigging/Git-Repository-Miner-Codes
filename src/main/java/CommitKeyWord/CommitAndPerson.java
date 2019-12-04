@@ -1,6 +1,8 @@
 package CommitKeyWord;
 
 import Contri.CommitMessages;
+import Repository.GitRepository;
+import Repository.GitRepositoryFactory;
 import com.csvreader.CsvWriter;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -106,15 +108,25 @@ public class CommitAndPerson {
             String time = Integer.toString(key.getYear() + 1900) + "/" + Integer.toString(key.getMonth() + 1)+ "/" + Integer.toString(key.getDate());
             //System.out.println("date: "+time);
             csvWriter.write(time);
-            csvWriter.write(entry.getValue().toString());
+            //csvWriter.write(entry.getValue().toString());
             Date dt = entry.getKey();
+            List<String> lines = new ArrayList<String>();
+            int sum_add = 0;
+            int sum_del = 0;
+            int sum_mod = 0;
+            int sum_fix = 0;
             for(String name:personName){
                 CommitLifeMap oneperson = person.get(name);
-                int add = oneperson.GetKindByDate(dt, 1);
-                int del = oneperson.GetKindByDate(dt, 2);
-                int mod = oneperson.GetKindByDate(dt, 3);
-                int fix = oneperson.GetKindByDate(dt, 4);
-                csvWriter.write(String.valueOf(add) + "-" + String.valueOf(del) + "-" +String.valueOf(mod) + "-" +String.valueOf(fix));
+                int add = oneperson.GetKindByDate(dt, 1);sum_add+=add;
+                int del = oneperson.GetKindByDate(dt, 2);sum_del+=del;
+                int mod = oneperson.GetKindByDate(dt, 3);sum_mod+=mod;
+                int fix = oneperson.GetKindByDate(dt, 4);sum_fix+=fix;
+                //csvWriter.write(String.valueOf(add) + "-" + String.valueOf(del) + "-" +String.valueOf(mod) + "-" +String.valueOf(fix));
+                lines.add(String.valueOf(add) + "-" + String.valueOf(del) + "-" +String.valueOf(mod) + "-" +String.valueOf(fix));
+            }
+            csvWriter.write(String.valueOf(sum_add) + "-" + String.valueOf(sum_del) + "-" +String.valueOf(sum_mod) + "-" +String.valueOf(sum_fix));
+            for(String line:lines){
+                csvWriter.write(line);
             }
             csvWriter.endRecord();
         }
@@ -134,8 +146,7 @@ public class CommitAndPerson {
                 System.out.println("Git is null");
                 return;
             }
-            CommitPersonDay cp = new CommitPersonDay(git, 0);
-            cp.SaveByWeek("D:\\课程学习\\创新项目\\MyCode\\SaveByWeek.csv");
+            CommitAndPerson cp = new CommitAndPerson(git, 0);
             cp.SaveByDay("D:\\课程学习\\创新项目\\MyCode\\SaveByDay.csv");
             System.out.println("Ready to cancel");
 
