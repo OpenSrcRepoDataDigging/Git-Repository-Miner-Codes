@@ -78,7 +78,7 @@ public class CommitLifeMap {
         date.setSeconds(0);
         date.setMinutes(0);
         date.setHours(0);
-        date.setDate(1);
+        // date.setDate(1);
         if(!map.containsKey(date))
             map.put(date,new NumCounter(message));
         else{

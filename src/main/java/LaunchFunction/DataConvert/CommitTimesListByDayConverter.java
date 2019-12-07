@@ -18,6 +18,13 @@ public class CommitTimesListByDayConverter implements Converter{
         CsvReader reader = new CsvReader(csvfilepath, ',', Charset.forName("UTF-8"));
         reader.readHeaders();
         String[] header = reader.getHeaders();
+        for (int i=0; i<header.length; i++){
+            for (int j=i+1; j<header.length; j++){
+                if (header[i].toUpperCase().equals(header[j].toUpperCase())){
+                    header[j] += "_dt";
+                }
+            }
+        }
 
         //prepare dbAttributes
         List<DBAttribute> dbAttributes = new ArrayList<>();

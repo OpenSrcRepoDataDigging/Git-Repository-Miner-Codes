@@ -44,7 +44,7 @@ public class MatrixSaveDelegate implements Save {
         //TODO: Save the FileContributorMatrix to file in proper format.
         System.out.println("--- MirageLyu: Start to save Contributor-File-LOC Matrix ---");
 
-        CsvWriter csvWriter = new CsvWriter(filepath, ',', Charset.forName("GBK"));
+        CsvWriter csvWriter = new CsvWriter(filepath, ',', Charset.forName("UTF-8"));
         try{
             csvWriter.write("");
             for(String filename : filelist){
