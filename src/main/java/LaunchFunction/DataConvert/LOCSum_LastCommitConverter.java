@@ -1,9 +1,6 @@
 package LaunchFunction.DataConvert;
 
-import LaunchFunction.DataConvert.model.DBAttribute;
-import LaunchFunction.DataConvert.model.DBTable;
-import LaunchFunction.DataConvert.model.DBTuple;
-import LaunchFunction.DataConvert.model.DBValue;
+import LaunchFunction.DataConvert.model.*;
 import com.csvreader.CsvReader;
 
 import java.nio.charset.Charset;
@@ -14,7 +11,7 @@ import java.util.List;
 public class LOCSum_LastCommitConverter implements Converter {
 
     @Override
-    public void convert(String csvfilepath, Connection connection, String repoID, boolean Update) throws Exception {
+    public void convert(String csvfilepath, Connection connection, String repoID, boolean Update, List<String> filter) throws Exception {
         CsvReader reader = new CsvReader(csvfilepath, ',', Charset.forName("UTF-8"));
         reader.readHeaders();
         String[] header = reader.getHeaders();
