@@ -64,7 +64,7 @@ public class MainDataGenerator {
     }*/
 
     public static void main(String[] args) {
-        new MainDataGenerator().ss_generateNew("https://github.com/MirageLyu/java-2018f-homework.git");
+        new MainDataGenerator().ss_generateNew("https://github.com/njubigdata04/InvertedIndexWithHBase.git");
     }
 
 
@@ -417,15 +417,18 @@ public class MainDataGenerator {
                 System.err.println(s);
             }
 
+            new CommitTimesListByDayConverter().convert(
+                    csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
+
+
             new FileContributorMatrixConverter().convert(
                     csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
 
             LOG.debug("Finish FCM.");
 
+
             new ContributorNetworkConverter().convert(
                     csvpath + "fcm.csv_original", connection, localpath.split("/")[localpath.split("/").length-1], false, OverallLOCConverter.generate_filter(50, csvpath + "loc.csv"));
-            new CommitTimesListByDayConverter().convert(
-                    csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
             new LOCSum_LastCommitConverter().convert(
                     csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
             new ClassifiedCommitListConverter().convert(

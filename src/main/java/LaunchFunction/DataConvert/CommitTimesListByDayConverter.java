@@ -50,7 +50,8 @@ public class CommitTimesListByDayConverter implements Converter{
             String[] raw_tuple = reader.getValues();
             DBTuple dbt = new DBTuple(raw_tuple.length);
             dbt.add(new DBValue<>(raw_tuple[0]));
-            for (int i=1; i<raw_tuple.length; i++){
+            dbt.add(new DBValue<>(Integer.parseInt(raw_tuple[1])));
+            for (int i=2; i<raw_tuple.length; i++){
                 if (flags[i]==1)
                     dbt.add(new DBValue<>(Integer.parseInt(raw_tuple[i])));
             }
