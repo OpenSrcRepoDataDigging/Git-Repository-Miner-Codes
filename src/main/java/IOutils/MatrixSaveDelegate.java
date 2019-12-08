@@ -65,7 +65,7 @@ public class MatrixSaveDelegate implements Save {
                     }
                 }
 
-                if (LOC <= 2000){
+                if (LOC <= 1000){
                     continue;
                 }
 
