@@ -5,6 +5,83 @@
 
 ***Remember to "git fetch origin master" and "git merge origin master" before your Modification!***
 
+## 数据库一览
+
+（1） ClassifiedCommitList+repoID
+
+字段：Date [name1] [name2]....
+
+元组示例：2019/5/5 1-8-5-6 3-5-5-2.....
+
+字段中除Date外，为筛选过的项目LOC贡献最多的20个贡献者。
+
+1-8-5-6代表Add-Del-Fix-Mod
+
+
+
+（2）CommitTimesListByDay+repoID
+
+字段：Date total [name1] [name2]....
+
+元组示例：2019/5/5 600 50 100.....
+
+字段中除Date和total外，为筛选过的项目LOC贡献最多的20个贡献者。
+
+total代表当天commit总数
+
+每个元素代表字段名对应贡献者在该日期的commit次数
+
+
+
+（3）ContributorNetworkMatrix+repoID
+
+字段：name [name1] [name2]....
+
+元组示例：[name1] 0 1 3 4
+
+字段中除name外，为筛选过的项目LOC贡献最多的50个贡献者。
+
+每个元素为两人共同贡献的文件数量
+
+整张表形似邻接矩阵
+
+
+
+（4）FileContributorMatrix+repoID
+
+字段：filename [name1] [name2]....
+
+元组示例：readme.md 80 130 ....
+
+字段中除filename外，为筛选过的项目LOC贡献最多的20个贡献者
+
+filename中出现的文件为筛选过的LOC>1000的文件
+
+每个元素的值为该贡献者在该文件上的LOC数量
+
+
+
+（5）LOCSumLastCommit+repoID
+
+**虽然名字是LOCSum，实际存的是Commit sum。**
+
+字段：name commits lastcommittime
+
+元组示例：MirageLyu 10 2019/5/11
+
+这里，贡献者不做筛选，所有贡献者的相关信息都有
+
+
+
+（6）OverallLOCList+repoID
+
+字段：AuthorName LOC_Add LOC_Del
+
+元组示例：MirageLyu 1636 368
+
+这里贡献者同样不做筛选，所有贡献者都会出现
+
+
 
 
 ## 关于代码结构
