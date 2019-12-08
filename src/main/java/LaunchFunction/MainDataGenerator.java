@@ -428,7 +428,7 @@ public class MainDataGenerator {
 
 
             new ContributorNetworkConverter().convert(
-                    csvpath + "fcm.csv_original", connection, localpath.split("/")[localpath.split("/").length-1], false, OverallLOCConverter.generate_filter(50, csvpath + "loc.csv"));
+                    csvpath + "fcm.csv_original", connection, localpath.split("/")[localpath.split("/").length-1], false, OverallLOCConverter.generate_filter(20, csvpath + "loc.csv"));
             new LOCSum_LastCommitConverter().convert(
                     csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
             new ClassifiedCommitListConverter().convert(
@@ -444,6 +444,7 @@ public class MainDataGenerator {
         return 0;
     }
 
+    /*
     public int ss_updateRepo (String GitRemoteAddress){
         // 0. 初始化
         try{
@@ -523,7 +524,7 @@ public class MainDataGenerator {
 
     }
 
-    /*public static int generateNew(String url){
+    public static int generateNew(String url){
         return new MainDataGenerator().ss_generateNew(url);
     }
 

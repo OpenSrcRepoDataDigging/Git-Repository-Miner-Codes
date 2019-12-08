@@ -16,6 +16,7 @@ public class FileContributorMatrixConverter implements Converter {
     // This kinds of structure can be optimized by stream process.
     // DBTable target_table = new DBTable();
 
+    /*
     public static void main(String[] args) {
         Connection connection = null;
         try {
@@ -84,6 +85,8 @@ public class FileContributorMatrixConverter implements Converter {
             e.printStackTrace();
         }
     }
+
+     */
 
     @Override
     public void convert(String csvfilepath, Connection connection, String repoID, boolean Update, List<String> filter) throws Exception {
