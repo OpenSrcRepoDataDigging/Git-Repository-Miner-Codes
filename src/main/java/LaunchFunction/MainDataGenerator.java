@@ -10,6 +10,7 @@ import org.eclipse.jgit.api.Git;
 import java.io.*;
 import java.sql.*;
 import java.util.Date;
+import java.util.List;
 
 /*
 
@@ -63,7 +64,7 @@ public class MainDataGenerator {
     }*/
 
     public static void main(String[] args) {
-        new MainDataGenerator().ss_generateNew("https://github.com/njubigdata04/InvertedIndexWithHbase.git");
+        new MainDataGenerator().ss_generateNew("https://github.com/MirageLyu/java-2018f-homework.git");
     }
 
 
@@ -405,16 +406,30 @@ public class MainDataGenerator {
         // TODO: 5.将计算出的csv文件再读入，转换后写入数据库
         // 传入： csv文件路径，以及数据库的连接connection
         try{
+
+            OverallLOCConverter olcc = new OverallLOCConverter();
+
+            olcc.convert(
+                    csvpath + "loc.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, null);
+
+            List<String> filter = olcc.getGen_filter();
+            for (String s : filter){
+                System.err.println(s);
+            }
+
             new FileContributorMatrixConverter().convert(
-                    csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+                    csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
+
+            LOG.debug("Finish FCM.");
+
             new ContributorNetworkConverter().convert(
-                    csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+                    csvpath + "fcm.csv_original", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
             new CommitTimesListByDayConverter().convert(
-                    csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+                    csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
             new LOCSum_LastCommitConverter().convert(
-                    csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+                    csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
             new ClassifiedCommitListConverter().convert(
-                    csvpath + "CommitKindPerPerson.csv", connection, localpath.split("/")[localpath.split("/").length-1], false);
+                    csvpath + "CommitKindPerPerson.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
 
             // TODO: convert here
         } catch (Exception e){
@@ -493,7 +508,7 @@ public class MainDataGenerator {
         // 传入： csv文件路径，以及数据库的连接connection
         try{
             new FileContributorMatrixConverter().convert(
-                    csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], true);
+                    csvpath + "fcm.csv", connection, localpath.split("/")[localpath.split("/").length-1], true, null);
             // TODO: convert here
         } catch (Exception e){
             e.printStackTrace();
