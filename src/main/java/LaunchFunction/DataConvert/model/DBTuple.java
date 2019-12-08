@@ -24,6 +24,10 @@ public class DBTuple {
         return this;
     }
 
+    public List<DBValue> getValue_list() {
+        return value_list;
+    }
+
     void prepareSQLStatement(PreparedStatement ptmt) {
         for (int i=0; i<value_list.size(); i++){
             DBValue dbv = value_list.get(i);
