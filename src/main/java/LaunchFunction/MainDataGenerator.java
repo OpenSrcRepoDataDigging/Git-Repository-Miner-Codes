@@ -423,7 +423,7 @@ public class MainDataGenerator {
             LOG.debug("Finish FCM.");
 
             new ContributorNetworkConverter().convert(
-                    csvpath + "fcm.csv_original", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
+                    csvpath + "fcm.csv_original", connection, localpath.split("/")[localpath.split("/").length-1], false, OverallLOCConverter.generate_filter(50, csvpath + "loc.csv"));
             new CommitTimesListByDayConverter().convert(
                     csvpath + "commitday.csv", connection, localpath.split("/")[localpath.split("/").length-1], false, filter);
             new LOCSum_LastCommitConverter().convert(

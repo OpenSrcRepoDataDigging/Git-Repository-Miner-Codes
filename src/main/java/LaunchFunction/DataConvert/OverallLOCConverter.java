@@ -61,6 +61,39 @@ public class OverallLOCConverter implements Converter{
 
     }
 
+    public static List<String> generate_filter(int size, String csvfilepath) throws Exception{
+
+        Queue<Pair> f = new PriorityQueue<>();
+
+        CsvReader reader = new CsvReader(csvfilepath, ',', Charset.forName("UTF-8"));
+        reader.readHeaders();
+        
+        while (reader.readRecord()){
+            String name;
+            int loc = 0;
+            String[] raw_tuple = reader.getValues();
+            name = raw_tuple[0];
+            for (int i=1; i<raw_tuple.length; i++){
+                loc += Integer.parseInt(raw_tuple[i]);
+            }
+            f.add(new Pair(name, loc));
+            if(f.size() > size){
+                f.poll();
+            }
+        }
+
+        Object[] arr = f.toArray();
+
+        List<String> result = new ArrayList<>();
+
+        for (Object o : arr){
+            result.add(((Pair)o).name);
+        }
+
+        return result;
+        
+    }
+
     public List<String> getGen_filter() {
         Object[] arr = gen_filter.toArray();
 
