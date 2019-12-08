@@ -64,7 +64,7 @@ public class MainDataGenerator {
     }*/
 
     public static void main(String[] args) {
-        new MainDataGenerator().ss_generateNew("https://github.com/njubigdata04/InvertedIndexWithHBase.git");
+        new MainDataGenerator().generateNew("https://github.com/njubigdata04/InvertedIndexWithHBase.git");
     }
 
 
@@ -343,7 +343,7 @@ public class MainDataGenerator {
         1： 该仓库之前添加过。不予计算。
         more....
      */
-    public int ss_generateNew (String GitRemoteAddress) {
+    public int generateNew (String GitRemoteAddress) {
 
         // 0. 初始化
         try{
@@ -523,12 +523,14 @@ public class MainDataGenerator {
 
     }
 
-    public static int generateNew(String url){
+    /*public static int generateNew(String url){
         return new MainDataGenerator().ss_generateNew(url);
     }
 
     public static int updateRepo(String url){
         return new MainDataGenerator().ss_updateRepo(url);
     }
+
+     */
 
 }
