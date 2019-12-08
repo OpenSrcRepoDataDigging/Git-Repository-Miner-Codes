@@ -19,7 +19,7 @@ public class LOCSum_LastCommitConverter implements Converter {
         //prepare dbAttributes
         List<DBAttribute> dbAttributes = new ArrayList<>();
         dbAttributes.add(new DBAttribute<>("name", DBAttribute.STRING_CONTENT, true));
-        dbAttributes.add(new DBAttribute<>("commits", DBAttribute.STRING_CONTENT, true));
+        dbAttributes.add(new DBAttribute<>("commits", DBAttribute.LONG_CONTENT, true));
         dbAttributes.add(new DBAttribute<>("lastcommittime", DBAttribute.STRING_CONTENT, true));
 
 
