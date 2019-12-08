@@ -47,7 +47,7 @@ public class OverallLOCConverter implements Converter{
             }
             dbTuples.add(dbt);
             gen_filter.add(new Pair(name, loc));
-            if(gen_filter.size() > 30){
+            if(gen_filter.size() > 20){
                 gen_filter.poll();
             }
 
